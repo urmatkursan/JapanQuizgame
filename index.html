@@ -23,6 +23,7 @@
   --border: #E2E0DA;
   --shadow: 0 2px 12px rgba(18,33,58,0.10);
   --shadow-lg: 0 8px 32px rgba(18,33,58,0.16);
+  --ink: #12213A;          /* dark-blue text (headings, numbers) */
   --radius: 14px;
   --radius-sm: 8px;
 }
@@ -41,6 +42,7 @@
   --gold-light: #2A2010;
   --green-light: #0D2018;
   --red-light: #2A1010;
+  --ink: #E8EDF5;
 }
 
 * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -152,7 +154,7 @@ header {
   line-height: 1.15;
   margin-bottom: 10px;
   letter-spacing: -0.5px;
-  color: var(--navy);
+  color: var(--ink);
 }
 
 #start-screen h1 span { color: var(--red); }
@@ -221,7 +223,7 @@ header {
 
 .diff-btn.active {
   background: var(--navy);
-  border-color: var(--navy);
+  border-color: var(--ink);
   color: #fff;
 }
 
@@ -253,7 +255,7 @@ header {
 .study-btn {
   padding: 14px;
   background: var(--white);
-  color: var(--navy);
+  color: var(--ink);
   border: 1.5px solid var(--border);
   border-radius: var(--radius-sm);
   font-size: 15px;
@@ -263,7 +265,7 @@ header {
   transition: all 0.15s;
 }
 
-.study-btn:hover { border-color: var(--navy); background: #F0F3FA; }
+.study-btn:hover { border-color: var(--ink); background: #F0F3FA; }
 
 .stats-row {
   display: flex;
@@ -273,7 +275,7 @@ header {
 }
 
 .stat-item { text-align: center; }
-.stat-num { font-size: 26px; font-weight: 700; color: var(--navy); }
+.stat-num { font-size: 26px; font-weight: 700; color: var(--ink); }
 .stat-lbl { font-size: 12px; color: var(--text-muted); margin-top: 2px; }
 
 /* ── HISTORY OPEN BTN (start screen) ── */
@@ -291,7 +293,7 @@ header {
   font-family: inherit;
   transition: all 0.15s;
 }
-.history-open-btn:hover { border-color: var(--navy); color: var(--navy); background: #F0F3FA; }
+.history-open-btn:hover { border-color: var(--ink); color: var(--ink); background: #F0F3FA; }
 
 /* ── HISTORY MODAL ── */
 #history-modal {
@@ -345,7 +347,7 @@ header {
 .hm-row:last-child { border-bottom: none; }
 .hm-date { color: var(--text-muted); font-size: 11px; min-width: 90px; }
 .hm-name { flex: 1; font-weight: 500; }
-.hm-score { font-weight: 700; color: var(--navy); }
+.hm-score { font-weight: 700; color: var(--ink); }
 .hm-pct { font-size: 12px; padding: 3px 8px; border-radius: 10px; font-weight: 700; }
 .hm-pct.great { background: var(--green-light); color: #1a6b3c; }
 .hm-pct.ok    { background: var(--gold-light);  color: #8a6200; }
@@ -368,7 +370,7 @@ header {
 .hp-name { font-weight: 700; font-size: 15px; }
 .hp-meta { font-size: 12px; color: var(--text-muted); margin-top: 2px; }
 .hp-best { text-align: right; }
-.hp-best-num { font-weight: 800; font-size: 16px; color: var(--navy); }
+.hp-best-num { font-weight: 800; font-size: 16px; color: var(--ink); }
 .hp-best-lbl { font-size: 10px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px; }
 .hp-arrow { color: var(--text-muted); font-size: 12px; transition: transform 0.2s; }
 .hp-player.open .hp-arrow { transform: rotate(90deg); }
@@ -402,7 +404,7 @@ header {
   gap: 10px;
 }
 
-.study-header h2 { font-size: 20px; font-weight: 700; color: var(--navy); }
+.study-header h2 { font-size: 20px; font-weight: 700; color: var(--ink); }
 
 .study-layout {
   display: grid;
@@ -645,7 +647,7 @@ header {
   justify-content: center;
   font-size: 16px;
   font-weight: 700;
-  color: var(--navy);
+  color: var(--ink);
 }
 
 .timer-num.warn { color: var(--gold); }
@@ -725,7 +727,7 @@ header {
 }
 
 .opt:hover:not(:disabled) {
-  border-color: var(--navy);
+  border-color: var(--ink);
   background: #F0F3FA;
   transform: translateY(-1px);
 }
@@ -875,7 +877,7 @@ header {
 .lb-rank.bronze { color: #CD7F32; }
 
 .lb-name { flex: 1; }
-.lb-sc { font-weight: 700; color: var(--navy); }
+.lb-sc { font-weight: 700; color: var(--ink); }
 
 /* History card */
 .history-card {
@@ -910,7 +912,7 @@ header {
 
 .history-row:last-child { border-bottom: none; }
 .history-date { color: var(--text-muted); font-size: 11px; min-width: 80px; }
-.history-score { font-weight: 700; color: var(--navy); margin-left: auto; }
+.history-score { font-weight: 700; color: var(--ink); margin-left: auto; }
 .history-pct {
   font-size: 11px;
   padding: 2px 7px;
@@ -931,7 +933,7 @@ header {
 .btn-secondary {
   padding: 13px;
   background: var(--white);
-  color: var(--navy);
+  color: var(--ink);
   border: 1.5px solid var(--border);
   border-radius: var(--radius-sm);
   font-size: 14px;
@@ -941,7 +943,7 @@ header {
   transition: all 0.15s;
 }
 
-.btn-secondary:hover { border-color: var(--navy); background: #F0F3FA; }
+.btn-secondary:hover { border-color: var(--ink); background: #F0F3FA; }
 
 .btn-primary {
   padding: 13px;
@@ -1162,7 +1164,25 @@ header {
   .sub-btns { grid-template-columns: 1fr; }
 }
 
+/* ── HEADER ON PHONES ── */
+.lb-short { display: none; }
+.logo span, .lang-btn { white-space: nowrap; }
+@media (max-width: 600px) {
+  header { padding: 0 12px; height: 54px; }
+  .logo { font-size: 15px; gap: 8px; }
+  .logo .dot { width: 8px; height: 8px; }
+  .header-right { gap: 6px; }
+  .lang-bar { gap: 3px; }
+  .lang-btn { padding: 5px 9px; font-size: 12px; }
+  .lb-full { display: none; }
+  .lb-short { display: inline; }
+  .theme-btn { width: 32px; height: 32px; font-size: 15px; }
+}
+
 /* dark mode fixes */
+[data-theme="dark"] .study-btn:hover,
+[data-theme="dark"] .btn-secondary:hover,
+[data-theme="dark"] .history-open-btn:hover { background: #22344A; border-color: #5B7BA6; color: var(--ink); }
 [data-theme="dark"] .name-input { background: #0F1923; color: var(--text); border-color: var(--border); }
 [data-theme="dark"] .opt { background: var(--white); color: var(--text); }
 [data-theme="dark"] .opt:hover:not(:disabled) { background: #22344A; }
@@ -1200,9 +1220,9 @@ header {
   </div>
   <div class="header-right">
     <div class="lang-bar">
-      <button class="lang-btn active" onclick="setLang('ja')">日本語</button>
-      <button class="lang-btn" onclick="setLang('en')">English</button>
-      <button class="lang-btn" onclick="setLang('ru')">Русский</button>
+      <button class="lang-btn active" data-lang="ja" onclick="setLang('ja')"><span class="lb-full">日本語</span><span class="lb-short">JP</span></button>
+      <button class="lang-btn" data-lang="en" onclick="setLang('en')"><span class="lb-full">English</span><span class="lb-short">EN</span></button>
+      <button class="lang-btn" data-lang="ru" onclick="setLang('ru')"><span class="lb-full">Русский</span><span class="lb-short">RU</span></button>
     </div>
     <button class="theme-btn" id="theme-btn" onclick="toggleTheme()" title="ダークモード">🌙</button>
   </div>
@@ -1846,6 +1866,9 @@ function toggleTheme() {
   document.documentElement.setAttribute("data-theme", isDark ? "dark" : "");
   document.getElementById("theme-btn").textContent = isDark ? "☀️" : "🌙";
   try { localStorage.setItem("jmq_theme", isDark ? "dark" : "light"); } catch(e){}
+  // map colours depend on the theme → redraw what is on screen
+  if (document.getElementById("quiz-screen").classList.contains("visible") && questions.length) renderQuizMap();
+  if (document.getElementById("study-screen").classList.contains("visible")) { drawStudyMap(studySelected); renderProgressLegend(); }
 }
 
 // ── Streak ──
@@ -1960,10 +1983,8 @@ function renderRegionStats() {
 // ── i18n ──
 function setLang(l) {
   lang = l;
-  document.querySelectorAll(".lang-btn").forEach(b => {
-    const map = {ja:"日本語", en:"English", ru:"Русский"};
-    b.classList.toggle("active", b.textContent === map[l]);
-  });
+  document.documentElement.lang = l;
+  document.querySelectorAll(".lang-btn").forEach(b => b.classList.toggle("active", b.dataset.lang === l));
   applyLang();
 }
 
