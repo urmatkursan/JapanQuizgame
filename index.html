@@ -1,0 +1,2818 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>日本地図クイズ — Japan Map Quiz</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700;900&family=Space+Grotesk:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --red: #E84040;
+  --red-dark: #B52E2E;
+  --red-light: #FFF0F0;
+  --navy: #12213A;
+  --navy-mid: #1E3254;
+  --gold: #F5A623;
+  --gold-light: #FFF8E7;
+  --green: #27AE60;
+  --green-light: #E8F8EF;
+  --bg: #F5F4F0;
+  --white: #FFFFFF;
+  --text: #1A1A2E;
+  --text-muted: #6B7280;
+  --border: #E2E0DA;
+  --shadow: 0 2px 12px rgba(18,33,58,0.10);
+  --shadow-lg: 0 8px 32px rgba(18,33,58,0.16);
+  --radius: 14px;
+  --radius-sm: 8px;
+}
+
+/* ── DARK THEME ── */
+[data-theme="dark"] {
+  --bg: #0F1923;
+  --white: #1A2535;
+  --text: #E8EDF5;
+  --text-muted: #7B8FA8;
+  --border: #2A3A50;
+  --shadow: 0 2px 12px rgba(0,0,0,0.4);
+  --shadow-lg: 0 8px 32px rgba(0,0,0,0.5);
+  --navy: #0A1628;
+  --navy-mid: #12213A;
+  --gold-light: #2A2010;
+  --green-light: #0D2018;
+  --red-light: #2A1010;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: 'Space Grotesk', 'Noto Sans JP', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+}
+
+/* ── HEADER ── */
+header {
+  background: var(--navy);
+  padding: 0 24px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 58px;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: #fff;
+  font-size: 18px;
+  font-weight: 700;
+  letter-spacing: -0.3px;
+}
+
+.logo .dot {
+  width: 10px;
+  height: 10px;
+  background: var(--red);
+  border-radius: 50%;
+}
+
+.header-right { display: flex; align-items: center; gap: 10px; }
+.lang-bar { display: flex; gap: 4px; }
+
+/* Theme toggle */
+.theme-btn {
+  width: 34px; height: 34px;
+  border-radius: 50%;
+  border: 1.5px solid rgba(255,255,255,0.2);
+  background: transparent;
+  color: rgba(255,255,255,0.7);
+  font-size: 16px;
+  cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  transition: all 0.15s;
+  flex-shrink: 0;
+}
+.theme-btn:hover { background: rgba(255,255,255,0.12); color: #fff; }
+
+.lang-btn {
+  padding: 5px 13px;
+  border-radius: 20px;
+  border: 1.5px solid rgba(255,255,255,0.2);
+  background: transparent;
+  color: rgba(255,255,255,0.65);
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  font-family: inherit;
+  transition: all 0.15s;
+}
+
+.lang-btn.active, .lang-btn:hover {
+  background: var(--red);
+  border-color: var(--red);
+  color: #fff;
+}
+
+/* ── SCREENS ── */
+.screen { display: none; }
+.screen.visible { display: block; }
+
+/* ── START SCREEN ── */
+#start-screen {
+  max-width: 540px;
+  margin: 0 auto;
+  padding: 40px 20px 60px;
+  text-align: center;
+}
+
+.hero-flag {
+  width: 72px;
+  height: 72px;
+  background: var(--white);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 24px;
+  border: 3px solid var(--border);
+  box-shadow: var(--shadow);
+}
+
+.hero-flag svg { width: 44px; height: 30px; }
+
+#start-screen h1 {
+  font-size: 34px;
+  font-weight: 900;
+  line-height: 1.15;
+  margin-bottom: 10px;
+  letter-spacing: -0.5px;
+  color: var(--navy);
+}
+
+#start-screen h1 span { color: var(--red); }
+
+#start-screen p {
+  font-size: 15px;
+  color: var(--text-muted);
+  margin-bottom: 32px;
+  line-height: 1.6;
+}
+
+.start-card {
+  background: var(--white);
+  border-radius: var(--radius);
+  padding: 28px;
+  box-shadow: var(--shadow-lg);
+  text-align: left;
+}
+
+.field-label {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 8px;
+  display: block;
+}
+
+.name-input {
+  width: 100%;
+  padding: 12px 14px;
+  border: 1.5px solid var(--border);
+  border-radius: var(--radius-sm);
+  font-size: 15px;
+  font-family: inherit;
+  color: var(--text);
+  background: var(--bg);
+  outline: none;
+  transition: border-color 0.15s;
+  margin-bottom: 20px;
+}
+
+.name-input:focus { border-color: var(--red); }
+
+.difficulty-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 8px;
+  margin-bottom: 20px;
+}
+
+.diff-btn {
+  padding: 10px 8px;
+  border: 1.5px solid var(--border);
+  border-radius: var(--radius-sm);
+  background: var(--bg);
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  font-family: inherit;
+  color: var(--text-muted);
+  text-align: center;
+  transition: all 0.15s;
+}
+
+.diff-btn.active {
+  background: var(--navy);
+  border-color: var(--navy);
+  color: #fff;
+}
+
+.diff-btn small { display: block; font-size: 11px; font-weight: 400; margin-top: 2px; }
+
+.start-btns {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+
+.start-btn {
+  padding: 14px;
+  background: var(--red);
+  color: #fff;
+  border: none;
+  border-radius: var(--radius-sm);
+  font-size: 15px;
+  font-weight: 700;
+  cursor: pointer;
+  font-family: inherit;
+  transition: background 0.15s, transform 0.1s;
+  letter-spacing: 0.2px;
+}
+
+.start-btn:hover { background: var(--red-dark); }
+.start-btn:active { transform: scale(0.98); }
+
+.study-btn {
+  padding: 14px;
+  background: var(--white);
+  color: var(--navy);
+  border: 1.5px solid var(--border);
+  border-radius: var(--radius-sm);
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  font-family: inherit;
+  transition: all 0.15s;
+}
+
+.study-btn:hover { border-color: var(--navy); background: #F0F3FA; }
+
+.stats-row {
+  display: flex;
+  justify-content: center;
+  gap: 32px;
+  margin-top: 32px;
+}
+
+.stat-item { text-align: center; }
+.stat-num { font-size: 26px; font-weight: 700; color: var(--navy); }
+.stat-lbl { font-size: 12px; color: var(--text-muted); margin-top: 2px; }
+
+/* ── HISTORY OPEN BTN (start screen) ── */
+.history-open-btn {
+  width: 100%;
+  margin-top: 10px;
+  padding: 10px;
+  background: transparent;
+  color: var(--text-muted);
+  border: 1.5px dashed var(--border);
+  border-radius: var(--radius-sm);
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  font-family: inherit;
+  transition: all 0.15s;
+}
+.history-open-btn:hover { border-color: var(--navy); color: var(--navy); background: #F0F3FA; }
+
+/* ── HISTORY MODAL ── */
+#history-modal {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(18,33,58,0.55);
+  z-index: 200;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+#history-modal.open { display: flex; }
+.history-modal-box {
+  background: var(--white);
+  border-radius: var(--radius);
+  width: 100%;
+  max-width: 480px;
+  box-shadow: var(--shadow-lg);
+  overflow: hidden;
+}
+.hm-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 20px;
+  background: var(--navy);
+  color: #fff;
+}
+.hm-header h3 { font-size: 16px; font-weight: 700; }
+.hm-close {
+  background: none;
+  border: none;
+  color: rgba(255,255,255,0.7);
+  font-size: 22px;
+  cursor: pointer;
+  line-height: 1;
+  padding: 0 2px;
+}
+.hm-close:hover { color: #fff; }
+.hm-body { padding: 0; max-height: 70vh; overflow-y: auto; }
+.hm-empty { padding: 32px; text-align: center; color: var(--text-muted); font-size: 14px; }
+.hm-row {
+  display: flex;
+  align-items: center;
+  padding: 12px 20px;
+  border-bottom: 1px solid var(--border);
+  gap: 12px;
+  font-size: 14px;
+}
+.hm-row:last-child { border-bottom: none; }
+.hm-date { color: var(--text-muted); font-size: 11px; min-width: 90px; }
+.hm-name { flex: 1; font-weight: 500; }
+.hm-score { font-weight: 700; color: var(--navy); }
+.hm-pct { font-size: 12px; padding: 3px 8px; border-radius: 10px; font-weight: 700; }
+.hm-pct.great { background: var(--green-light); color: #1a6b3c; }
+.hm-pct.ok    { background: var(--gold-light);  color: #8a6200; }
+.hm-pct.low   { background: var(--red-light);   color: var(--red-dark); }
+/* Player groups in history */
+.hp-player { border-bottom: 1px solid var(--border); }
+.hp-player:last-child { border-bottom: none; }
+.hp-head {
+  display: flex; align-items: center; gap: 12px;
+  padding: 14px 20px; cursor: pointer; transition: background 0.12s;
+}
+.hp-head:hover { background: var(--bg); }
+.hp-avatar {
+  width: 36px; height: 36px; border-radius: 50%;
+  background: var(--navy); color: #fff;
+  display: flex; align-items: center; justify-content: center;
+  font-weight: 700; font-size: 15px; flex-shrink: 0;
+}
+.hp-info { flex: 1; min-width: 0; }
+.hp-name { font-weight: 700; font-size: 15px; }
+.hp-meta { font-size: 12px; color: var(--text-muted); margin-top: 2px; }
+.hp-best { text-align: right; }
+.hp-best-num { font-weight: 800; font-size: 16px; color: var(--navy); }
+.hp-best-lbl { font-size: 10px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px; }
+.hp-arrow { color: var(--text-muted); font-size: 12px; transition: transform 0.2s; }
+.hp-player.open .hp-arrow { transform: rotate(90deg); }
+.hp-games { display: none; background: var(--bg); }
+.hp-player.open .hp-games { display: block; }
+.hp-games .hm-row { padding: 9px 20px 9px 68px; font-size: 13px; }
+[data-theme="dark"] .hp-best-num, [data-theme="dark"] .hm-score { color: var(--text); }
+[data-theme="dark"] .hp-avatar { background: #3A5A8A; }
+.hm-footer { padding: 12px 20px; border-top: 1px solid var(--border); display: flex; justify-content: flex-end; gap: 8px; }
+.hm-clear-btn {
+  padding: 8px 16px;
+  background: none;
+  border: 1.5px solid var(--border);
+  border-radius: var(--radius-sm);
+  font-size: 13px;
+  color: var(--text-muted);
+  cursor: pointer;
+  font-family: inherit;
+}
+.hm-clear-btn:hover { border-color: var(--red); color: var(--red); }
+
+/* ── STUDY SCREEN ── */
+#study-screen { max-width: 880px; margin: 0 auto; padding: 24px 16px 60px; }
+
+.study-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 16px;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.study-header h2 { font-size: 20px; font-weight: 700; color: var(--navy); }
+
+.study-layout {
+  display: grid;
+  grid-template-columns: 1fr 340px;
+  gap: 16px;
+  align-items: start;
+}
+
+@media (max-width: 700px) {
+  .study-layout { grid-template-columns: 1fr; }
+}
+
+.study-map-card {
+  background: var(--white);
+  border-radius: var(--radius);
+  padding: 12px;
+  box-shadow: var(--shadow);
+  border: 1.5px solid var(--border);
+}
+
+#study-jmap { width: 100%; display: block; }
+
+/* Right panel in study mode */
+.study-right { display: flex; flex-direction: column; gap: 12px; }
+
+.study-info-panel {
+  background: var(--navy);
+  border-radius: var(--radius);
+  padding: 0;
+  color: #fff;
+  display: none;
+  overflow: hidden;
+}
+
+.study-info-panel.show { display: block; }
+
+.sip-flag-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 16px 18px 12px;
+  border-bottom: 1px solid rgba(255,255,255,0.1);
+}
+
+.sip-num {
+  width: 36px;
+  height: 36px;
+  background: rgba(255,255,255,0.12);
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 13px;
+  font-weight: 700;
+  color: rgba(255,255,255,0.7);
+  flex-shrink: 0;
+}
+
+.sip-name-block {}
+.sip-name { font-size: 20px; font-weight: 800; line-height: 1.1; }
+.sip-name-sub { font-size: 13px; color: rgba(255,255,255,0.55); margin-top: 2px; }
+
+.sip-body { padding: 14px 18px; display: flex; flex-direction: column; gap: 10px; }
+
+.sip-row {
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+}
+
+.sip-icon { font-size: 16px; width: 22px; flex-shrink: 0; margin-top: 1px; }
+.sip-row-content {}
+.sip-row-label { font-size: 11px; color: rgba(255,255,255,0.5); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 2px; }
+.sip-row-val { font-size: 13px; color: rgba(255,255,255,0.9); line-height: 1.45; }
+.sip-row-val strong { color: var(--gold); }
+
+.sip-region-badge {
+  display: inline-block;
+  background: rgba(255,255,255,0.12);
+  border-radius: 12px;
+  padding: 2px 10px;
+  font-size: 12px;
+  color: rgba(255,255,255,0.8);
+  margin-top: 4px;
+}
+
+/* Empty state for study panel */
+.study-empty-panel {
+  background: var(--white);
+  border-radius: var(--radius);
+  padding: 28px 20px;
+  text-align: center;
+  border: 1.5px dashed var(--border);
+  color: var(--text-muted);
+}
+.study-empty-panel .big-icon { font-size: 36px; margin-bottom: 10px; }
+.study-empty-panel p { font-size: 13px; line-height: 1.6; }
+
+.study-legend {
+  background: var(--white);
+  border-radius: var(--radius);
+  padding: 12px;
+  box-shadow: var(--shadow);
+  border: 1.5px solid var(--border);
+  max-height: 320px;
+  overflow-y: auto;
+}
+
+.study-legend-title {
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: var(--text-muted);
+  margin-bottom: 8px;
+  padding: 0 4px;
+}
+
+.legend-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 8px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background 0.12s;
+  font-size: 13px;
+}
+
+.legend-item:hover { background: var(--bg); }
+.legend-item.active { background: var(--red-light); }
+
+.legend-num {
+  width: 22px;
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--text-muted);
+  text-align: right;
+  flex-shrink: 0;
+}
+
+.legend-item.active .legend-num { color: var(--red); }
+
+.legend-name { font-weight: 600; }
+.legend-sub { font-size: 11px; color: var(--text-muted); }
+
+.study-info-panel.show { display: block; }
+.sip-cap { font-size: 13px; color: rgba(255,255,255,0.6); margin-bottom: 8px; }
+.sip-fact { font-size: 14px; color: rgba(255,255,255,0.85); line-height: 1.55; }
+
+/* ── QUIZ SCREEN ── */
+#quiz-screen { max-width: 700px; margin: 0 auto; padding: 20px 16px 40px; }
+
+.quiz-topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 16px;
+}
+
+.progress-track {
+  flex: 1;
+  height: 6px;
+  background: var(--border);
+  border-radius: 3px;
+  overflow: hidden;
+  margin: 0 14px;
+}
+
+.progress-fill {
+  height: 100%;
+  background: var(--red);
+  border-radius: 3px;
+  transition: width 0.4s;
+}
+
+.score-badge {
+  background: var(--navy);
+  color: #fff;
+  border-radius: 20px;
+  padding: 4px 13px;
+  font-size: 13px;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.q-counter {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-muted);
+  white-space: nowrap;
+}
+
+/* Timer */
+.timer-row {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+
+.timer-circle {
+  position: relative;
+  width: 52px;
+  height: 52px;
+  flex-shrink: 0;
+}
+
+.timer-circle svg {
+  position: absolute;
+  top: 0; left: 0;
+  transform: rotate(-90deg);
+}
+
+.timer-circle .timer-bg {
+  fill: none;
+  stroke: var(--border);
+  stroke-width: 4;
+}
+
+.timer-circle .timer-arc {
+  fill: none;
+  stroke: var(--red);
+  stroke-width: 4;
+  stroke-linecap: round;
+  stroke-dasharray: 132;
+  stroke-dashoffset: 0;
+  transition: stroke-dashoffset 1s linear, stroke 0.3s;
+}
+
+.timer-circle .timer-arc.warn { stroke: var(--gold); }
+.timer-circle .timer-arc.danger { stroke: var(--red); }
+
+.timer-num {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--navy);
+}
+
+.timer-num.warn { color: var(--gold); }
+.timer-num.danger { color: var(--red); }
+
+/* Hint button */
+.hint-row {
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 8px;
+}
+
+.hint-btn {
+  padding: 6px 14px;
+  background: var(--gold-light);
+  border: 1.5px solid var(--gold);
+  border-radius: 20px;
+  font-size: 13px;
+  font-weight: 600;
+  color: #8a6200;
+  cursor: pointer;
+  font-family: inherit;
+  transition: all 0.15s;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.hint-btn:hover:not(:disabled) { background: var(--gold); color: #fff; }
+.hint-btn:disabled { opacity: 0.4; cursor: default; }
+
+/* Map */
+.map-card {
+  background: var(--white);
+  border-radius: var(--radius);
+  padding: 12px;
+  box-shadow: var(--shadow);
+  margin-bottom: 14px;
+  border: 1.5px solid var(--border);
+}
+
+#jmap { width: 100%; display: block; }
+
+/* Question */
+.q-label {
+  text-align: center;
+  font-size: 15px;
+  color: var(--text-muted);
+  margin-bottom: 14px;
+  font-weight: 500;
+}
+
+.q-label strong { color: var(--red); }
+
+/* Options */
+#options {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  margin-bottom: 14px;
+}
+
+.opt {
+  padding: 13px 14px;
+  border: 1.5px solid var(--border);
+  border-radius: var(--radius-sm);
+  background: var(--white);
+  color: var(--text);
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  text-align: left;
+  font-family: inherit;
+  transition: all 0.15s;
+  line-height: 1.4;
+  box-shadow: var(--shadow);
+}
+
+.opt:hover:not(:disabled) {
+  border-color: var(--navy);
+  background: #F0F3FA;
+  transform: translateY(-1px);
+}
+
+.opt:disabled { cursor: default; transform: none !important; }
+
+.opt.correct {
+  background: var(--green-light);
+  border-color: var(--green);
+  color: #1a6b3c;
+}
+
+.opt.wrong {
+  background: #FFF0F0;
+  border-color: var(--red);
+  color: var(--red-dark);
+}
+
+.opt.eliminated {
+  opacity: 0.25;
+  pointer-events: none;
+}
+
+.opt .opt-jp { font-weight: 700; font-size: 15px; display: block; }
+.opt .opt-en { font-size: 12px; color: var(--text-muted); display: block; margin-top: 2px; }
+
+/* Info card */
+.info-card {
+  display: none;
+  background: var(--navy);
+  border-radius: var(--radius-sm);
+  padding: 14px 16px;
+  margin-bottom: 12px;
+  color: #fff;
+}
+
+.info-card .ic-name { font-size: 16px; font-weight: 700; margin-bottom: 3px; }
+.info-card .ic-cap { font-size: 12px; color: rgba(255,255,255,0.6); margin-bottom: 8px; }
+.info-card .ic-fact { font-size: 13px; color: rgba(255,255,255,0.85); line-height: 1.55; }
+
+/* Feedback */
+#feedback {
+  text-align: center;
+  font-size: 14px;
+  font-weight: 600;
+  min-height: 20px;
+  margin-bottom: 10px;
+  color: var(--text-muted);
+}
+
+#feedback.ok { color: var(--green); }
+#feedback.fail { color: var(--red); }
+
+.next-btn {
+  display: none;
+  width: 100%;
+  padding: 13px;
+  background: var(--navy);
+  color: #fff;
+  border: none;
+  border-radius: var(--radius-sm);
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  font-family: inherit;
+  transition: background 0.15s;
+  letter-spacing: 0.2px;
+}
+
+.next-btn:hover { background: var(--navy-mid); }
+
+/* ── RESULT SCREEN ── */
+#result-screen {
+  max-width: 580px;
+  margin: 0 auto;
+  padding: 32px 20px 60px;
+  text-align: center;
+}
+
+.result-hero {
+  background: var(--navy);
+  border-radius: var(--radius);
+  padding: 32px 24px;
+  color: #fff;
+  margin-bottom: 20px;
+}
+
+.result-hero .big-score {
+  font-size: 64px;
+  font-weight: 900;
+  line-height: 1;
+  color: var(--gold);
+  letter-spacing: -2px;
+}
+
+.result-hero .score-denom { font-size: 22px; font-weight: 400; color: rgba(255,255,255,0.5); }
+.result-hero .result-msg { font-size: 18px; font-weight: 600; margin-top: 10px; color: #fff; }
+.result-hero .result-sub { font-size: 14px; color: rgba(255,255,255,0.55); margin-top: 4px; }
+
+.lb-card {
+  background: var(--white);
+  border-radius: var(--radius);
+  overflow: hidden;
+  box-shadow: var(--shadow-lg);
+  margin-bottom: 20px;
+  text-align: left;
+}
+
+.lb-title {
+  padding: 13px 16px;
+  background: var(--bg);
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+  color: var(--text-muted);
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  justify-content: space-between;
+}
+
+.lb-row {
+  display: flex;
+  align-items: center;
+  padding: 11px 16px;
+  border-bottom: 1px solid var(--border);
+  gap: 12px;
+  font-size: 14px;
+}
+
+.lb-row:last-child { border-bottom: none; }
+
+.lb-row.me {
+  background: #EEF2FF;
+  font-weight: 600;
+}
+
+.lb-rank {
+  min-width: 26px;
+  font-weight: 700;
+  color: var(--text-muted);
+  font-size: 13px;
+}
+
+.lb-rank.gold { color: #D4A017; }
+.lb-rank.silver { color: #9E9E9E; }
+.lb-rank.bronze { color: #CD7F32; }
+
+.lb-name { flex: 1; }
+.lb-sc { font-weight: 700; color: var(--navy); }
+
+/* History card */
+.history-card {
+  background: var(--white);
+  border-radius: var(--radius);
+  overflow: hidden;
+  box-shadow: var(--shadow);
+  margin-bottom: 20px;
+  text-align: left;
+  border: 1.5px solid var(--border);
+}
+
+.history-title {
+  padding: 12px 16px;
+  background: var(--bg);
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+  color: var(--text-muted);
+  border-bottom: 1px solid var(--border);
+}
+
+.history-row {
+  display: flex;
+  align-items: center;
+  padding: 10px 16px;
+  border-bottom: 1px solid var(--border);
+  gap: 12px;
+  font-size: 13px;
+}
+
+.history-row:last-child { border-bottom: none; }
+.history-date { color: var(--text-muted); font-size: 11px; min-width: 80px; }
+.history-score { font-weight: 700; color: var(--navy); margin-left: auto; }
+.history-pct {
+  font-size: 11px;
+  padding: 2px 7px;
+  border-radius: 10px;
+  font-weight: 600;
+}
+
+.history-pct.great { background: var(--green-light); color: #1a6b3c; }
+.history-pct.ok { background: var(--gold-light); color: #8a6200; }
+.history-pct.low { background: var(--red-light); color: var(--red-dark); }
+
+.result-btns {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+
+.btn-secondary {
+  padding: 13px;
+  background: var(--white);
+  color: var(--navy);
+  border: 1.5px solid var(--border);
+  border-radius: var(--radius-sm);
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  font-family: inherit;
+  transition: all 0.15s;
+}
+
+.btn-secondary:hover { border-color: var(--navy); background: #F0F3FA; }
+
+.btn-primary {
+  padding: 13px;
+  background: var(--red);
+  color: #fff;
+  border: none;
+  border-radius: var(--radius-sm);
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  font-family: inherit;
+  transition: background 0.15s;
+}
+
+.btn-primary:hover { background: var(--red-dark); }
+
+/* Loading */
+#loading-overlay {
+  position: fixed;
+  inset: 0;
+  background: var(--bg);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  z-index: 999;
+}
+
+.spinner {
+  width: 40px;
+  height: 40px;
+  border: 3px solid var(--border);
+  border-top-color: var(--red);
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+  margin-bottom: 14px;
+}
+
+@keyframes spin { to { transform: rotate(360deg); } }
+#loading-overlay p { color: var(--text-muted); font-size: 14px; }
+
+/* ── CONFETTI ── */
+#confetti-container {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 500;
+  overflow: hidden;
+}
+
+.confetti-piece {
+  position: absolute;
+  width: 10px;
+  height: 10px;
+  top: -20px;
+  opacity: 0;
+  animation: confettiFall linear forwards;
+}
+
+@keyframes confettiFall {
+  0%   { opacity: 1; transform: translateY(0) rotate(0deg); }
+  100% { opacity: 0; transform: translateY(110vh) rotate(720deg); }
+}
+
+/* Map label tooltip (study mode) */
+.map-label {
+  font-size: 9px;
+  font-weight: 700;
+  fill: var(--navy);
+  pointer-events: none;
+  text-anchor: middle;
+  dominant-baseline: middle;
+}
+
+/* ── STREAK BADGE ── */
+.streak-badge {
+  display: none;
+  align-items: center;
+  gap: 5px;
+  background: linear-gradient(135deg, #FF6B35, #F5A623);
+  color: #fff;
+  border-radius: 20px;
+  padding: 4px 12px;
+  font-size: 13px;
+  font-weight: 700;
+  animation: streakPop 0.3s cubic-bezier(0.34,1.56,0.64,1);
+}
+.streak-badge.show { display: flex; }
+@keyframes streakPop {
+  0% { transform: scale(0.5); opacity: 0; }
+  100% { transform: scale(1); opacity: 1; }
+}
+
+/* ── REGION STATS ── */
+.region-stats-card {
+  background: var(--white);
+  border-radius: var(--radius);
+  overflow: hidden;
+  box-shadow: var(--shadow);
+  margin-bottom: 20px;
+  text-align: left;
+  border: 1.5px solid var(--border);
+}
+.rs-title {
+  padding: 12px 16px;
+  background: var(--bg);
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+  color: var(--text-muted);
+  border-bottom: 1px solid var(--border);
+}
+.rs-body { padding: 12px 16px; display: flex; flex-direction: column; gap: 9px; }
+.rs-row { display: flex; align-items: center; gap: 10px; }
+.rs-name { width: 60px; font-size: 12px; font-weight: 600; color: var(--text); flex-shrink: 0; }
+.rs-bar-track { flex: 1; height: 8px; background: var(--border); border-radius: 4px; overflow: hidden; }
+.rs-bar-fill { height: 100%; border-radius: 4px; transition: width 0.6s ease; }
+.rs-pct { width: 36px; font-size: 12px; font-weight: 700; text-align: right; flex-shrink: 0; }
+
+
+/* ── MODE / REGION / WEAK (start screen) ── */
+.mode-row { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 20px; }
+.mode-btn {
+  padding: 12px 10px; border: 1.5px solid var(--border); border-radius: var(--radius-sm);
+  background: var(--bg); cursor: pointer; font-family: inherit; color: var(--text-muted);
+  font-size: 14px; font-weight: 700; display: flex; flex-direction: column; align-items: center; gap: 2px;
+  transition: all 0.15s;
+}
+.mode-btn .mode-ic { font-size: 22px; }
+.mode-btn small { font-size: 11px; font-weight: 400; }
+.mode-btn.active { border-color: var(--red); background: var(--red-light); color: var(--red-dark); }
+.region-select {
+  width: 100%; padding: 11px 12px; border: 1.5px solid var(--border); border-radius: var(--radius-sm);
+  font-size: 14px; font-family: inherit; color: var(--text); background: var(--bg);
+  margin-bottom: 14px; cursor: pointer; outline: none;
+}
+.region-select:focus { border-color: var(--red); }
+.weak-toggle {
+  display: flex; align-items: center; gap: 12px; padding: 10px 12px; margin-bottom: 20px;
+  border: 1.5px solid var(--border); border-radius: var(--radius-sm); cursor: pointer; background: var(--bg);
+}
+.weak-toggle input { width: 18px; height: 18px; accent-color: var(--red); flex-shrink: 0; cursor: pointer; }
+.weak-toggle b { display: block; font-size: 14px; color: var(--text); }
+.weak-toggle small { font-size: 12px; color: var(--text-muted); }
+.weak-toggle:has(input:checked) { border-color: var(--red); background: var(--red-light); }
+.sub-btns { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 10px; }
+.sub-btns .history-open-btn { margin-top: 0; }
+
+/* ── MAP MODE (quiz) ── */
+.map-q { font-size: 16px; margin-bottom: 10px; }
+.q-target { font-size: 24px; font-weight: 900; color: var(--red); padding: 0 4px; }
+.q-target-sub { font-size: 13px; color: var(--text-muted); font-weight: 500; margin-right: 6px; }
+#jmap.clickable { cursor: crosshair; }
+.hm-tag { font-size: 12px; color: var(--text-muted); white-space: nowrap; }
+
+/* ── ACHIEVEMENTS ── */
+#ach-modal {
+  display: none; position: fixed; inset: 0; background: rgba(18,33,58,0.55);
+  z-index: 200; align-items: center; justify-content: center; padding: 20px;
+}
+#ach-modal.open { display: flex; }
+.ach-box { max-width: 580px; }
+.ach-count { font-size: 12px; background: var(--gold); color: #fff; border-radius: 10px; padding: 2px 8px; margin-left: 6px; vertical-align: 2px; }
+.ach-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; padding: 16px; }
+.ach-card {
+  border: 1.5px solid var(--border); border-radius: 10px; padding: 12px;
+  display: flex; gap: 10px; align-items: flex-start; background: var(--white);
+}
+.ach-card .a-ic { font-size: 26px; line-height: 1; }
+.ach-card .a-name { font-weight: 700; font-size: 13px; }
+.ach-card .a-desc { font-size: 11px; color: var(--text-muted); margin-top: 2px; line-height: 1.4; }
+.ach-card .a-date { font-size: 11px; color: var(--green); margin-top: 4px; font-weight: 700; }
+.ach-card.locked { opacity: 0.55; }
+.ach-card.got { border-color: var(--gold); background: var(--gold-light); }
+.ach-bar { height: 6px; background: var(--border); border-radius: 3px; margin-top: 6px; overflow: hidden; }
+.ach-bar div { height: 100%; background: var(--gold); border-radius: 3px; }
+.new-ach-card { border-color: var(--gold); }
+.new-ach-card .rs-row { gap: 12px; }
+
+#toast-wrap {
+  position: fixed; left: 50%; bottom: 24px; transform: translateX(-50%);
+  z-index: 600; display: flex; flex-direction: column; gap: 8px; align-items: center; pointer-events: none;
+}
+.toast {
+  display: flex; align-items: center; gap: 12px; background: #12213A; color: #fff;
+  border-radius: 14px; padding: 12px 20px; box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+  border: 2px solid var(--gold); min-width: 260px;
+  animation: toastIn 0.45s cubic-bezier(0.34,1.56,0.64,1);
+}
+.toast .t-ic { font-size: 30px; }
+.toast .t-top { font-size: 11px; color: var(--gold); text-transform: uppercase; letter-spacing: 0.6px; font-weight: 700; }
+.toast .t-name { font-size: 16px; font-weight: 700; }
+.toast.out { animation: toastOut 0.3s forwards; }
+@keyframes toastIn { from { transform: translateY(40px) scale(0.9); opacity: 0; } to { transform: none; opacity: 1; } }
+@keyframes toastOut { to { transform: translateY(20px); opacity: 0; } }
+
+/* ── STUDY: progress view ── */
+.study-view-toggle { display: flex; background: var(--white); border: 1.5px solid var(--border); border-radius: 20px; padding: 3px; }
+.svt-btn {
+  border: none; background: transparent; padding: 6px 12px; border-radius: 16px;
+  font-size: 13px; font-weight: 600; color: var(--text-muted); cursor: pointer; font-family: inherit;
+}
+.svt-btn.active { background: var(--navy); color: #fff; }
+.progress-legend { display: none; flex-wrap: wrap; gap: 6px 14px; padding: 10px 6px 2px; font-size: 12px; color: var(--text-muted); align-items: center; }
+.progress-legend.show { display: flex; }
+.pl-sw { width: 12px; height: 12px; border-radius: 3px; display: inline-block; margin-right: 5px; vertical-align: -1px; }
+.pl-summary { width: 100%; font-weight: 700; color: var(--text); font-size: 13px; }
+
+[data-theme="dark"] .mode-btn, [data-theme="dark"] .region-select, [data-theme="dark"] .weak-toggle { background: #0F1923; }
+[data-theme="dark"] .mode-btn.active { background: #2A1010; color: #FF8A8A; }
+[data-theme="dark"] .weak-toggle:has(input:checked) { background: #2A1010; }
+[data-theme="dark"] .svt-btn.active { background: #3A5A8A; }
+[data-theme="dark"] .ach-card.got { background: #2A2010; }
+
+@media (max-width: 480px) {
+  .ach-grid { grid-template-columns: 1fr; }
+  .sub-btns { grid-template-columns: 1fr; }
+}
+
+/* dark mode fixes */
+[data-theme="dark"] .name-input { background: #0F1923; color: var(--text); border-color: var(--border); }
+[data-theme="dark"] .opt { background: var(--white); color: var(--text); }
+[data-theme="dark"] .opt:hover:not(:disabled) { background: #22344A; }
+[data-theme="dark"] .diff-btn { background: #0F1923; color: var(--text-muted); }
+[data-theme="dark"] .diff-btn.active { background: #3A5A8A; border-color: #3A5A8A; color: #fff; }
+[data-theme="dark"] .study-empty-panel { background: var(--white); }
+[data-theme="dark"] .lb-row.me { background: #1a2a40; }
+[data-theme="dark"] .hm-row { border-color: var(--border); }
+[data-theme="dark"] .history-modal-box { background: var(--white); }
+[data-theme="dark"] .hm-body { background: var(--white); }
+[data-theme="dark"] #loading-overlay { background: #0F1923; }
+
+@media (max-width: 480px) {
+  #options { grid-template-columns: 1fr; }
+  #start-screen h1 { font-size: 28px; }
+  .result-btns { grid-template-columns: 1fr; }
+  .difficulty-row { grid-template-columns: 1fr; }
+  .start-btns { grid-template-columns: 1fr; }
+}
+</style>
+</head>
+<body>
+
+<div id="confetti-container"></div>
+
+<div id="loading-overlay">
+  <div class="spinner"></div>
+  <p id="loading-txt">地図を読み込み中...</p>
+</div>
+
+<header>
+  <div class="logo">
+    <div class="dot"></div>
+    <span>Japan Map Quiz</span>
+  </div>
+  <div class="header-right">
+    <div class="lang-bar">
+      <button class="lang-btn active" onclick="setLang('ja')">日本語</button>
+      <button class="lang-btn" onclick="setLang('en')">English</button>
+      <button class="lang-btn" onclick="setLang('ru')">Русский</button>
+    </div>
+    <button class="theme-btn" id="theme-btn" onclick="toggleTheme()" title="ダークモード">🌙</button>
+  </div>
+</header>
+
+<!-- START -->
+<div id="start-screen" class="screen visible">
+  <div class="hero-flag">
+    <svg viewBox="0 0 900 600" xmlns="http://www.w3.org/2000/svg">
+      <rect width="900" height="600" fill="#fff"/>
+      <circle cx="450" cy="300" r="180" fill="#BC002D"/>
+    </svg>
+  </div>
+  <h1 id="s-title">日本地図<span>クイズ</span></h1>
+  <p id="s-sub">47都道府県を全部覚えよう！楽しく地理を学べる。</p>
+
+  <div class="start-card">
+    <label class="field-label" id="s-name-lbl" for="name-input">ニックネーム</label>
+    <input class="name-input" id="name-input" type="text" maxlength="20" placeholder="例: Urmat">
+
+    <label class="field-label" id="s-diff-lbl">難しさ</label>
+    <div class="difficulty-row">
+      <button class="diff-btn active" data-q="10" onclick="setDiff(this,10)">
+        <span id="d1">かんたん</span>
+        <small>10問</small>
+      </button>
+      <button class="diff-btn" data-q="20" onclick="setDiff(this,20)">
+        <span id="d2">ふつう</span>
+        <small>20問</small>
+      </button>
+      <button class="diff-btn" data-q="47" onclick="setDiff(this,47)">
+        <span id="d3">むずかしい</span>
+        <small>全47問</small>
+      </button>
+    </div>
+
+    <label class="field-label" id="s-mode-lbl">モード</label>
+    <div class="mode-row">
+      <button class="mode-btn active" data-mode="choice" onclick="setMode('choice')">
+        <span class="mode-ic">🔤</span><span id="m1">4択クイズ</span><small id="m1s">名前を選ぶ</small>
+      </button>
+      <button class="mode-btn" data-mode="map" onclick="setMode('map')">
+        <span class="mode-ic">🗾</span><span id="m2">地図で探す</span><small id="m2s">地図をクリック</small>
+      </button>
+    </div>
+
+    <label class="field-label" id="s-region-lbl" for="region-select">地域</label>
+    <select class="region-select" id="region-select" onchange="gameRegion = this.value"></select>
+
+    <label class="weak-toggle">
+      <input type="checkbox" id="weak-toggle" onchange="weakFirst = this.checked">
+      <span><b id="weak-title">🎯 苦手モード</b><small id="weak-desc">間違えた県を多めに出題</small></span>
+    </label>
+
+    <div class="start-btns">
+      <button class="study-btn" id="s-study-btn" onclick="openStudyMode()">🗾 地図を学ぶ</button>
+      <button class="start-btn" id="s-start-btn" onclick="startQuiz()">スタート →</button>
+    </div>
+    <div class="sub-btns">
+      <button class="history-open-btn" id="s-history-btn" onclick="openHistoryModal()">📋 <span id="s-hist-lbl">プレイ履歴を見る</span></button>
+      <button class="history-open-btn" id="s-ach-btn" onclick="openAchModal()">🏆 <span id="s-ach-lbl">実績</span></button>
+    </div>
+  </div>
+
+  <div class="stats-row">
+    <div class="stat-item">
+      <div class="stat-num">47</div>
+      <div class="stat-lbl" id="s-stat1">都道府県</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-num">3</div>
+      <div class="stat-lbl" id="s-stat2">言語</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-num" id="s-players">—</div>
+      <div class="stat-lbl" id="s-stat3">プレイヤー</div>
+    </div>
+  </div>
+</div>
+
+<!-- HISTORY MODAL -->
+<div id="history-modal">
+  <div class="history-modal-box">
+    <div class="hm-header">
+      <h3 id="hm-title">📋 プレイ履歴</h3>
+      <button class="hm-close" onclick="closeHistoryModal()">×</button>
+    </div>
+    <div class="hm-body" id="hm-body"></div>
+    <div class="hm-footer">
+      <button class="hm-clear-btn" id="hm-clear-btn" onclick="clearHistory()">🗑 履歴を消す</button>
+    </div>
+  </div>
+</div>
+
+<!-- ACHIEVEMENTS MODAL -->
+<div id="ach-modal">
+  <div class="history-modal-box ach-box">
+    <div class="hm-header">
+      <h3 id="ach-title">🏆 実績</h3>
+      <button class="hm-close" onclick="closeAchModal()">×</button>
+    </div>
+    <div class="hm-body" id="ach-body"></div>
+  </div>
+</div>
+
+<div id="toast-wrap"></div>
+
+<!-- STUDY MODE -->
+<div id="study-screen" class="screen">
+  <div class="study-header">
+    <h2 id="study-title">🗾 地図を学ぶ</h2>
+    <div style="display:flex;gap:8px;align-items:center">
+      <div class="study-view-toggle">
+        <button class="svt-btn active" id="svt-normal" onclick="setStudyView('normal')">🗾 <span id="svt-n">通常</span></button>
+        <button class="svt-btn" id="svt-progress" onclick="setStudyView('progress')">📊 <span id="svt-p">進捗</span></button>
+      </div>
+      <span style="color:var(--text-muted);font-size:13px" id="study-hint-txt">← クリックで詳細</span>
+      <button class="btn-secondary" onclick="goHome()" style="padding:8px 16px;font-size:13px" id="study-back-btn">← 戻る</button>
+    </div>
+  </div>
+
+  <div class="study-layout">
+    <!-- Left: map -->
+    <div>
+      <div class="study-map-card">
+        <svg id="study-jmap" viewBox="0 0 850 680" xmlns="http://www.w3.org/2000/svg"></svg>
+        <div class="progress-legend" id="progress-legend"></div>
+      </div>
+    </div>
+
+    <!-- Right: info + legend -->
+    <div class="study-right">
+      <!-- Empty state / info panel -->
+      <div class="study-empty-panel" id="study-empty-panel">
+        <div class="big-icon">🗾</div>
+        <p id="study-empty-txt">地図の県をクリックして<br>詳しい情報を見よう！</p>
+      </div>
+
+      <div class="study-info-panel" id="study-info-panel">
+        <div class="sip-flag-row">
+          <div class="sip-num" id="sip-num">01</div>
+          <div class="sip-name-block">
+            <div class="sip-name" id="sip-name"></div>
+            <div class="sip-name-sub" id="sip-name-sub"></div>
+          </div>
+        </div>
+        <div class="sip-body">
+          <div class="sip-row">
+            <div class="sip-icon">🏛️</div>
+            <div class="sip-row-content">
+              <div class="sip-row-label" id="sip-cap-lbl">県庁所在地</div>
+              <div class="sip-row-val" id="sip-cap"></div>
+            </div>
+          </div>
+          <div class="sip-row">
+            <div class="sip-icon">🗺️</div>
+            <div class="sip-row-content">
+              <div class="sip-row-label" id="sip-region-lbl">地方</div>
+              <div class="sip-row-val"><span class="sip-region-badge" id="sip-region"></span></div>
+            </div>
+          </div>
+          <div class="sip-row">
+            <div class="sip-icon">📊</div>
+            <div class="sip-row-content">
+              <div class="sip-row-label" id="sip-your-lbl">あなたの成績</div>
+              <div class="sip-row-val" id="sip-your"></div>
+            </div>
+          </div>
+          <div class="sip-row">
+            <div class="sip-icon">💡</div>
+            <div class="sip-row-content">
+              <div class="sip-row-label" id="sip-fact-lbl">豆知識</div>
+              <div class="sip-row-val" id="sip-fact"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Scrollable list -->
+      <div class="study-legend">
+        <div class="study-legend-title" id="study-list-title">47都道府県</div>
+        <div id="study-legend"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- QUIZ -->
+<div id="quiz-screen" class="screen">
+  <div class="quiz-topbar">
+    <span class="q-counter" id="q-counter">1 / 10</span>
+    <div class="progress-track"><div class="progress-fill" id="progress-fill" style="width:0%"></div></div>
+    <div style="display:flex;align-items:center;gap:8px">
+      <div class="streak-badge" id="streak-badge">🔥 <span id="streak-num">0</span></div>
+      <div class="score-badge" id="score-badge">0 / 0</div>
+    </div>
+  </div>
+
+  <!-- Timer -->
+  <div class="timer-row">
+    <div class="timer-circle">
+      <svg width="52" height="52" viewBox="0 0 52 52">
+        <circle class="timer-bg" cx="26" cy="26" r="21"/>
+        <circle class="timer-arc" id="timer-arc" cx="26" cy="26" r="21"/>
+      </svg>
+      <div class="timer-num" id="timer-num">15</div>
+    </div>
+  </div>
+
+  <div class="hint-row">
+    <button class="hint-btn" id="hint-btn" onclick="useHint()">💡 <span id="hint-btn-txt">ヒント</span></button>
+  </div>
+
+  <p class="q-label map-q" id="map-q" style="display:none"></p>
+
+  <div class="map-card">
+    <svg id="jmap" viewBox="0 0 850 680" xmlns="http://www.w3.org/2000/svg"></svg>
+  </div>
+
+  <p class="q-label" id="q-label">赤くなっている県はどこですか？</p>
+
+  <div id="options"></div>
+
+  <div class="info-card" id="info-card">
+    <div class="ic-name" id="ic-name"></div>
+    <div class="ic-cap" id="ic-cap"></div>
+    <div class="ic-fact" id="ic-fact"></div>
+  </div>
+
+  <div id="feedback"></div>
+  <button class="next-btn" id="next-btn" onclick="nextQ()">次の問題 →</button>
+</div>
+
+<!-- RESULT -->
+<div id="result-screen" class="screen">
+  <div class="result-hero">
+    <div class="big-score" id="res-score">0</div>
+    <div class="score-denom" id="res-denom">/ 10</div>
+    <div class="result-msg" id="res-msg">お疲れ様！</div>
+    <div class="result-sub" id="res-sub">正答率 70%</div>
+  </div>
+
+  <div class="lb-card">
+    <div class="lb-title">
+      <span id="lb-title-txt">ランキング</span>
+      <span id="lb-update-txt" style="font-weight:400;text-transform:none;letter-spacing:0">上位10名</span>
+    </div>
+    <div id="leaderboard"></div>
+  </div>
+
+  <div class="region-stats-card new-ach-card" id="new-ach-card" style="display:none">
+    <div class="rs-title" id="new-ach-title">🏆 新しい実績！</div>
+    <div class="rs-body" id="new-ach-body"></div>
+  </div>
+
+  <div class="region-stats-card" id="region-stats-card" style="display:none">
+    <div class="rs-title" id="rs-title-txt">地域別成績</div>
+    <div class="rs-body" id="rs-body"></div>
+  </div>
+
+  <div class="history-card" id="history-card" style="display:none">
+    <div class="history-title" id="history-title-txt">履歴</div>
+    <div id="history-list"></div>
+  </div>
+
+  <div class="result-btns">
+    <button class="btn-secondary" onclick="goHome()" id="res-home-btn">← ホームへ</button>
+    <button class="btn-primary" onclick="restartQuiz()" id="res-play-btn">もう一度</button>
+  </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.8.5/d3.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/topojson/3.0.2/topojson.min.js"></script>
+<script>
+// ── i18n ──
+const T = {
+  ja:{
+    loading:"地図を読み込み中...",
+    title:"日本地図<span>クイズ</span>",
+    sub:"47都道府県を全部覚えよう！楽しく地理を学べる。",
+    nameLbl:"ニックネーム", namePh:"例: Urmat",
+    diffLbl:"難しさ", d1:"かんたん", d2:"ふつう", d3:"むずかしい",
+    startBtn:"スタート →", studyBtn:"🗾 地図を学ぶ",
+    stat1:"都道府県", stat2:"言語", stat3:"プレイヤー",
+    qlabel:"<strong>赤</strong>くなっている県はどこですか？",
+    correct:"✓ 正解！", wrong:"✗ 不正解。正解：",
+    timeout:"⏰ 時間切れ！正解：",
+    nextBtn:"次の問題 →", capLbl:"県庁所在地：",
+    hintBtn:"ヒント", hintUsed:"使用済み",
+    studyTitle:"🗾 地図を学ぶ", studyBackBtn:"← 戻る",
+    studyHint:"クリックで詳細を見る",
+    resMsg10:"完璧！日本地理マスター！", resMsg7:"よくできました！", resMsg4:"まあまあです", resMsgFail:"もっと練習しましょう！",
+    resAccuracy:"正答率",
+    lbTitle:"ランキング", lbTop:"上位10名",
+    homeBtn:"← ホームへ", playBtn:"もう一度",
+    historyTitle:"プレイ履歴", historyBtn:"プレイ履歴を見る", hGames:"回", hBest:"ベスト", hAvg:"平均", hEmpty:"まだ履歴がありません", historyClear:"🗑 履歴を消す",
+    prefListTitle:"47都道府県", studyEmptyTxt:"地図の県をクリックして<br>詳しい情報を見よう！",
+    modeLbl:"モード", m1:"4択クイズ", m1s:"名前を選ぶ", m2:"地図で探す", m2s:"地図をクリック",
+    regionLbl:"地域", weakTitle:"🎯 苦手モード", weakDesc:"間違えた県を多めに出題します",
+    achBtn:"実績", achTitle:"🏆 実績", achNew:"🏆 新しい実績！", achUnlocked:"実績解除！",
+    mapQ:"{x} はどこ？地図をクリック！", mapWrong:"✗ それは{x}です。正解：",
+    svtNormal:"通常", svtProgress:"進捗",
+    lgGood:"得意 (80%+)", lgMid:"まあまあ", lgBad:"苦手 (<50%)", lgNone:"未出題",
+    progSummary:"{n}/47 県に挑戦 · 正答率 {p}%",
+    studyYourLbl:"あなたの成績", noData:"まだ出題されていません",
+    studyCapLbl:"県庁所在地", studyRegionLbl:"地方", studyFactLbl:"豆知識",
+  },
+  en:{
+    loading:"Loading map...",
+    title:"Japan Map <span>Quiz</span>",
+    sub:"Learn all 47 prefectures in a fun, interactive way!",
+    nameLbl:"Nickname", namePh:"e.g. Urmat",
+    diffLbl:"Difficulty", d1:"Easy", d2:"Normal", d3:"Hard",
+    startBtn:"Start →", studyBtn:"🗾 Study Map",
+    stat1:"Prefectures", stat2:"Languages", stat3:"Players",
+    qlabel:"Which prefecture is highlighted in <strong>red</strong>?",
+    correct:"✓ Correct!", wrong:"✗ Wrong! The answer is:",
+    timeout:"⏰ Time's up! Answer:",
+    nextBtn:"Next →", capLbl:"Capital: ",
+    hintBtn:"Hint", hintUsed:"Used",
+    studyTitle:"🗾 Study Map", studyBackBtn:"← Back",
+    studyHint:"Click a prefecture to see details",
+    resMsg10:"Perfect! Japan geography master!", resMsg7:"Well done!", resMsg4:"Not bad!", resMsgFail:"Keep practicing!",
+    resAccuracy:"Accuracy",
+    lbTitle:"Leaderboard", lbTop:"Top 10",
+    homeBtn:"← Home", playBtn:"Play again",
+    historyTitle:"Game History", historyBtn:"View Game History", hGames:"games", hBest:"Best", hAvg:"Avg", hEmpty:"No history yet", historyClear:"🗑 Clear History",
+    prefListTitle:"47 Prefectures", studyEmptyTxt:"Click a prefecture on the map<br>to see detailed info!",
+    modeLbl:"Mode", m1:"Multiple choice", m1s:"Pick the name", m2:"Find on map", m2s:"Click the map",
+    regionLbl:"Region", weakTitle:"🎯 Weak spots", weakDesc:"Asks more of the prefectures you got wrong",
+    achBtn:"Achievements", achTitle:"🏆 Achievements", achNew:"🏆 New achievements!", achUnlocked:"Achievement unlocked!",
+    mapQ:"Where is {x}? Click it on the map!", mapWrong:"✗ That's {x}. The answer is:",
+    svtNormal:"Normal", svtProgress:"Progress",
+    lgGood:"Strong (80%+)", lgMid:"OK", lgBad:"Weak (<50%)", lgNone:"Not asked yet",
+    progSummary:"{n}/47 prefectures tried · {p}% accuracy",
+    studyYourLbl:"Your results", noData:"Not asked yet",
+    studyCapLbl:"Capital", studyRegionLbl:"Region", studyFactLbl:"Fun fact",
+  },
+  ru:{
+    loading:"Загрузка карты...",
+    title:"Викторина по <span>Японии</span>",
+    sub:"Выучи все 47 префектур в увлекательном формате!",
+    nameLbl:"Ник", namePh:"Например: Urmat",
+    diffLbl:"Сложность", d1:"Легко", d2:"Средне", d3:"Сложно",
+    startBtn:"Начать →", studyBtn:"🗾 Учить карту",
+    stat1:"Префектур", stat2:"Языка", stat3:"Игроков",
+    qlabel:"Какая префектура выделена <strong>красным</strong>?",
+    correct:"✓ Правильно!", wrong:"✗ Неверно. Ответ:",
+    timeout:"⏰ Время вышло! Ответ:",
+    nextBtn:"Далее →", capLbl:"Столица: ",
+    hintBtn:"Подсказка", hintUsed:"Использована",
+    studyTitle:"🗾 Учить карту", studyBackBtn:"← Назад",
+    studyHint:"Кликни по префектуре для деталей",
+    resMsg10:"Идеально! Ты мастер географии!", resMsg7:"Молодец!", resMsg4:"Неплохо!", resMsgFail:"Нужно больше практики!",
+    resAccuracy:"Точность",
+    lbTitle:"Таблица рекордов", lbTop:"Топ 10",
+    homeBtn:"← На главную", playBtn:"Играть снова",
+    historyTitle:"История игр", historyBtn:"История игр", hGames:"игр", hBest:"Лучший", hAvg:"Средний", hEmpty:"Истории ещё нет", historyClear:"🗑 Очистить историю",
+    prefListTitle:"47 префектур", studyEmptyTxt:"Кликни на префектуру на карте<br>чтобы увидеть подробности!",
+    modeLbl:"Режим", m1:"4 варианта", m1s:"Выбери название", m2:"Найди на карте", m2s:"Кликни по карте",
+    regionLbl:"Регион", weakTitle:"🎯 Работа над ошибками", weakDesc:"Чаще спрашивает префектуры, где ты ошибался",
+    achBtn:"Достижения", achTitle:"🏆 Достижения", achNew:"🏆 Новые достижения!", achUnlocked:"Достижение получено!",
+    mapQ:"Где находится {x}? Нажми на карте!", mapWrong:"✗ Это {x}. Ответ:",
+    svtNormal:"Обычная", svtProgress:"Прогресс",
+    lgGood:"Хорошо (80%+)", lgMid:"Средне", lgBad:"Слабо (<50%)", lgNone:"Не было",
+    progSummary:"{n}/47 префектур пройдено · точность {p}%",
+    studyYourLbl:"Твои результаты", noData:"Ещё не было в игре",
+    studyCapLbl:"Столица", studyRegionLbl:"Регион", studyFactLbl:"Интересный факт",
+  }
+};
+
+const prefData = {
+  "01":{ja:"北海道",en:"Hokkaido",ru:"Хоккайдо",cap:{ja:"札幌市",en:"Sapporo",ru:"Саппоро"},fact:{ja:"日本最大の県。ラベンダーと雪まつりで有名。",en:"Japan's largest prefecture, famous for lavender and snow festivals.",ru:"Самая большая префектура. Известна лавандой и снежными фестивалями."}},
+  "02":{ja:"青森県",en:"Aomori",ru:"Аомори",cap:{ja:"青森市",en:"Aomori City",ru:"г. Аомори"},fact:{ja:"ねぶた祭りとりんごの産地として有名。",en:"Famous for the Nebuta Festival and apple production.",ru:"Известна фестивалем Небута и производством яблок."}},
+  "03":{ja:"岩手県",en:"Iwate",ru:"Иватэ",cap:{ja:"盛岡市",en:"Morioka",ru:"Мориока"},fact:{ja:"本州最大の県。宮沢賢治の故郷。",en:"Largest in Honshu, birthplace of Kenji Miyazawa.",ru:"Крупнейшая на Хонсю. Родина писателя Кэндзи Миядзава."}},
+  "04":{ja:"宮城県",en:"Miyagi",ru:"Мияги",cap:{ja:"仙台市",en:"Sendai",ru:"Сэндай"},fact:{ja:"東北地方最大の都市、仙台があります。七夕まつりが有名。",en:"Home to Sendai, the largest city in Tohoku. Famous Tanabata festival.",ru:"Здесь находится Сэндай — крупнейший город Тохоку."}},
+  "05":{ja:"秋田県",en:"Akita",ru:"Акита",cap:{ja:"秋田市",en:"Akita City",ru:"г. Акита"},fact:{ja:"なまはげや秋田犬で有名。お米の産地。",en:"Famous for Namahage traditions and Akita dog breed.",ru:"Известна традицией Намахаге и породой собак акита."}},
+  "06":{ja:"山形県",en:"Yamagata",ru:"Ямагата",cap:{ja:"山形市",en:"Yamagata City",ru:"г. Ямагата"},fact:{ja:"さくらんぼの名産地。蔵王温泉も有名。",en:"Famous for cherries and Zao Onsen hot springs.",ru:"Известна черешней и горячими источниками Дзао."}},
+  "07":{ja:"福島県",en:"Fukushima",ru:"Фукусима",cap:{ja:"福島市",en:"Fukushima City",ru:"г. Фукусима"},fact:{ja:"会津若松城や猪苗代湖が有名。",en:"Famous for Aizuwakamatsu Castle and Lake Inawashiro.",ru:"Известна замком Айдзувакамацу и озером Инавасиро."}},
+  "08":{ja:"茨城県",en:"Ibaraki",ru:"Ибараки",cap:{ja:"水戸市",en:"Mito",ru:"Мито"},fact:{ja:"偕楽園は日本三名園の一つ。納豆発祥地。",en:"Kairaku-en is one of Japan's Three Great Gardens.",ru:"Кайракуэн — один из трёх великих садов Японии."}},
+  "09":{ja:"栃木県",en:"Tochigi",ru:"Тотиги",cap:{ja:"宇都宮市",en:"Utsunomiya",ru:"Уцуномия"},fact:{ja:"日光東照宮と宇都宮の餃子が有名。",en:"Famous for Nikko Toshogu and Utsunomiya gyoza dumplings.",ru:"Известна святилищем Никко Тосёгу и гёдза."}},
+  "10":{ja:"群馬県",en:"Gunma",ru:"Гумма",cap:{ja:"前橋市",en:"Maebashi",ru:"Маэбаси"},fact:{ja:"草津温泉は日本一の名湯。",en:"Kusatsu Onsen is one of Japan's finest hot springs.",ru:"Горячие источники Кусацу — одни из лучших в Японии."}},
+  "11":{ja:"埼玉県",en:"Saitama",ru:"Сайтама",cap:{ja:"さいたま市",en:"Saitama City",ru:"г. Сайтама"},fact:{ja:"川越は「小江戸」と呼ばれる。",en:"Kawagoe is called 'Little Edo'. Major Tokyo commuter hub.",ru:"Кавагоэ называют «Маленьким Эдо». Пригород Токио."}},
+  "12":{ja:"千葉県",en:"Chiba",ru:"Тиба",cap:{ja:"千葉市",en:"Chiba City",ru:"г. Тиба"},fact:{ja:"成田国際空港と東京ディズニーランドがある。",en:"Home to Narita Airport and Tokyo Disneyland.",ru:"Здесь аэропорт Нарита и Токийский Диснейленд."}},
+  "13":{ja:"東京都",en:"Tokyo",ru:"Токио",cap:{ja:"新宿区（都庁）",en:"Shinjuku (Metro Gov.)",ru:"Синдзюку (правительство)"},fact:{ja:"日本の首都。世界最大の都市圏の一つ。",en:"Japan's capital and one of the world's largest metro areas.",ru:"Столица Японии и один из крупнейших мегаполисов мира."}},
+  "14":{ja:"神奈川県",en:"Kanagawa",ru:"Канагава",cap:{ja:"横浜市",en:"Yokohama",ru:"Ёкогама"},fact:{ja:"横浜中華街と鎌倉の大仏が有名。",en:"Famous for Yokohama Chinatown and Kamakura's Great Buddha.",ru:"Известна чайнатауном Иокогамы и Большим Буддой Камакуры."}},
+  "15":{ja:"新潟県",en:"Niigata",ru:"Ниигата",cap:{ja:"新潟市",en:"Niigata City",ru:"г. Ниигата"},fact:{ja:"コシヒカリ米と日本酒の産地。スキーリゾートも有名。",en:"Famous for Koshihikari rice, sake, and ski resorts.",ru:"Известна рисом косихикари, саке и горнолыжными курортами."}},
+  "16":{ja:"富山県",en:"Toyama",ru:"Тояма",cap:{ja:"富山市",en:"Toyama City",ru:"г. Тояма"},fact:{ja:"立山黒部アルペンルートが有名。魚が豊富。",en:"Famous for the Tateyama Kurobe Alpine Route and seafood.",ru:"Известна Альпийским маршрутом Татэяма-Куробэ."}},
+  "17":{ja:"石川県",en:"Ishikawa",ru:"Исикава",cap:{ja:"金沢市",en:"Kanazawa",ru:"Канадзава"},fact:{ja:"兼六園と金沢城が有名。",en:"Famous for Kenroku-en garden and Kanazawa Castle.",ru:"Известна садом Кэнрокуэн и замком Канадзава."}},
+  "18":{ja:"福井県",en:"Fukui",ru:"Фукуи",cap:{ja:"福井市",en:"Fukui City",ru:"г. Фукуи"},fact:{ja:"恐竜化石の産地。永平寺が有名。",en:"Famous for dinosaur fossils and Eiheiji Temple.",ru:"Известна окаменелостями динозавров и храмом Эйхэйдзи."}},
+  "19":{ja:"山梨県",en:"Yamanashi",ru:"Яманаси",cap:{ja:"甲府市",en:"Kofu",ru:"Кофу"},fact:{ja:"富士山の北に位置。ぶどうと富士五湖で有名。",en:"North of Mt. Fuji, famous for grapes and the Fuji Five Lakes.",ru:"К северу от Фудзи. Известна виноградом и пятью озёрами."}},
+  "20":{ja:"長野県",en:"Nagano",ru:"Нагано",cap:{ja:"長野市",en:"Nagano City",ru:"г. Нагано"},fact:{ja:"1998年冬季五輪開催地。日本アルプスの中心。",en:"1998 Winter Olympics host. Home to the Japanese Alps.",ru:"Место Зимней Олимпиады 1998 года. Японские Альпы."}},
+  "21":{ja:"岐阜県",en:"Gifu",ru:"Гифу",cap:{ja:"岐阜市",en:"Gifu City",ru:"г. Гифу"},fact:{ja:"白川郷の合掌造りは世界遺産。飛騨高山も有名。",en:"Shirakawa-go is a UNESCO World Heritage Site.",ru:"Деревня Сиракава-го — объект ЮНЕСКО."}},
+  "22":{ja:"静岡県",en:"Shizuoka",ru:"Сидзуока",cap:{ja:"静岡市",en:"Shizuoka City",ru:"г. Сидзуока"},fact:{ja:"富士山の南。お茶の産地として有名。",en:"South of Mt. Fuji, famous for green tea production.",ru:"К югу от Фудзи. Известна зелёным чаем."}},
+  "23":{ja:"愛知県",en:"Aichi",ru:"Аити",cap:{ja:"名古屋市",en:"Nagoya",ru:"Нагоя"},fact:{ja:"トヨタの本拠地。名古屋城と味噌カツが有名。",en:"Home to Toyota, Nagoya Castle, and miso katsu cuisine.",ru:"Штаб-квартира Toyota. Замок Нагоя и мисо-кацу."}},
+  "24":{ja:"三重県",en:"Mie",ru:"Миэ",cap:{ja:"津市",en:"Tsu City",ru:"г. Цу"},fact:{ja:"伊勢神宮は日本最高の神社。松阪牛も有名。",en:"Home to Ise Grand Shrine and famous Matsusaka beef.",ru:"Здесь святилище Исэ — самое священное в Японии."}},
+  "25":{ja:"滋賀県",en:"Shiga",ru:"Сига",cap:{ja:"大津市",en:"Otsu",ru:"Оцу"},fact:{ja:"琵琶湖は日本最大の湖。",en:"Home to Lake Biwa, Japan's largest lake.",ru:"Здесь озеро Бива — крупнейшее озеро Японии."}},
+  "26":{ja:"京都府",en:"Kyoto",ru:"Киото",cap:{ja:"京都市",en:"Kyoto City",ru:"г. Киото"},fact:{ja:"日本の古都。金閣寺、清水寺など世界遺産多数。",en:"Ancient capital, home to Kinkaku-ji and Kiyomizudera.",ru:"Древняя столица. Кинкакудзи, Киёмидзудэра и др."}},
+  "27":{ja:"大阪府",en:"Osaka",ru:"Осака",cap:{ja:"大阪市",en:"Osaka City",ru:"г. Осака"},fact:{ja:"たこ焼き・お好み焼きで有名。日本第二の経済都市。",en:"Famous for takoyaki and okonomiyaki. Japan's economic hub.",ru:"Известна такояки и окономияки. Второй центр экономики."}},
+  "28":{ja:"兵庫県",en:"Hyogo",ru:"Хёго",cap:{ja:"神戸市",en:"Kobe",ru:"Кобэ"},fact:{ja:"神戸ビーフと姫路城（世界遺産）が有名。",en:"Famous for Kobe beef. Himeji Castle is a UNESCO site.",ru:"Известна говядиной кобэ. Замок Химэдзи — ЮНЕСКО."}},
+  "29":{ja:"奈良県",en:"Nara",ru:"Нара",cap:{ja:"奈良市",en:"Nara City",ru:"г. Нара"},fact:{ja:"東大寺の大仏と奈良公園の鹿が有名。",en:"Famous for Todai-ji's Great Buddha and deer in Nara Park.",ru:"Известна Большим Буддой Тодайдзи и оленями в парке."}},
+  "30":{ja:"和歌山県",en:"Wakayama",ru:"Вакаяма",cap:{ja:"和歌山市",en:"Wakayama City",ru:"г. Вакаяма"},fact:{ja:"高野山と熊野古道は世界遺産。",en:"Koyasan and Kumano Kodo pilgrimage trail are UNESCO sites.",ru:"Коясан и путь Кумано Кодо — объекты ЮНЕСКО."}},
+  "31":{ja:"鳥取県",en:"Tottori",ru:"Тоттори",cap:{ja:"鳥取市",en:"Tottori City",ru:"г. Тоттори"},fact:{ja:"鳥取砂丘は日本最大の砂丘。人口最少の県。",en:"Largest sand dunes in Japan. Least populous prefecture.",ru:"Крупнейшие дюны Японии. Самая малонаселённая префектура."}},
+  "32":{ja:"島根県",en:"Shimane",ru:"Симанэ",cap:{ja:"松江市",en:"Matsue",ru:"Мацуэ"},fact:{ja:"出雲大社は縁結びで有名。石見銀山は世界遺産。",en:"Izumo Shrine famous for matchmaking. Iwami Ginzan is UNESCO.",ru:"Святилище Идзумо — место встречи влюблённых."}},
+  "33":{ja:"岡山県",en:"Okayama",ru:"Окаяма",cap:{ja:"岡山市",en:"Okayama City",ru:"г. Окаяма"},fact:{ja:"後楽園は日本三名園の一つ。桃の産地。",en:"Korakuen is one of Japan's Three Great Gardens.",ru:"Коракуэн — один из трёх великих садов Японии."}},
+  "34":{ja:"広島県",en:"Hiroshima",ru:"Хиросима",cap:{ja:"広島市",en:"Hiroshima City",ru:"г. Хиросима"},fact:{ja:"平和記念碑と厳島神社は世界遺産。",en:"Peace Memorial and Itsukushima Shrine are UNESCO sites.",ru:"Мемориал мира и Ицукусима — объекты ЮНЕСКО."}},
+  "35":{ja:"山口県",en:"Yamaguchi",ru:"Ямагути",cap:{ja:"山口市",en:"Yamaguchi City",ru:"г. Ямагути"},fact:{ja:"秋吉台は日本最大のカルスト台地。",en:"Akiyoshidai is Japan's largest karst plateau.",ru:"Акиёситай — крупнейшее карстовое плато Японии."}},
+  "36":{ja:"徳島県",en:"Tokushima",ru:"Токусима",cap:{ja:"徳島市",en:"Tokushima City",ru:"г. Токусима"},fact:{ja:"阿波踊りは日本最大の盆踊り。渦潮が有名。",en:"Awa Odori is Japan's largest Bon dance. Famous whirlpools.",ru:"Ава Одори — крупнейший фестиваль Бон-одори в Японии."}},
+  "37":{ja:"香川県",en:"Kagawa",ru:"Кагава",cap:{ja:"高松市",en:"Takamatsu",ru:"Такамацу"},fact:{ja:"讃岐うどんの発祥地。最小の県の一つ。",en:"Birthplace of sanuki udon. One of Japan's smallest prefectures.",ru:"Родина лапши сануки-удон. Одна из самых маленьких."}},
+  "38":{ja:"愛媛県",en:"Ehime",ru:"Эхимэ",cap:{ja:"松山市",en:"Matsuyama",ru:"Мацуяма"},fact:{ja:"道後温泉は日本最古の温泉の一つ。みかんの産地。",en:"Dogo Onsen is among Japan's oldest hot springs.",ru:"Дого Онсэн — одни из старейших источников Японии."}},
+  "39":{ja:"高知県",en:"Kochi",ru:"Коти",cap:{ja:"高知市",en:"Kochi City",ru:"г. Коти"},fact:{ja:"坂本龍馬の故郷。四万十川が有名。",en:"Birthplace of Ryoma Sakamoto. Famous for Shimanto River.",ru:"Родина Рёма Сакамото. Река Симанто."}},
+  "40":{ja:"福岡県",en:"Fukuoka",ru:"Фукуока",cap:{ja:"福岡市",en:"Fukuoka City",ru:"г. Фукуока"},fact:{ja:"九州最大の都市。博多ラーメンが有名。",en:"Largest city in Kyushu. Famous for Hakata ramen.",ru:"Крупнейший город Кюсю. Рамэн Хаката."}},
+  "41":{ja:"佐賀県",en:"Saga",ru:"Сага",cap:{ja:"佐賀市",en:"Saga City",ru:"г. Сага"},fact:{ja:"有田焼と伊万里焼は世界的に有名。",en:"Famous for Arita ware and Imari ware ceramics.",ru:"Известна всемирно известной керамикой Арита и Имари."}},
+  "42":{ja:"長崎県",en:"Nagasaki",ru:"Нагасаки",cap:{ja:"長崎市",en:"Nagasaki City",ru:"г. Нагасаки"},fact:{ja:"原爆の被爆地。出島も有名。",en:"Site of atomic bombing. Famous for Dejima island.",ru:"Место атомной бомбардировки. Остров Дэдзима."}},
+  "43":{ja:"熊本県",en:"Kumamoto",ru:"Кумамото",cap:{ja:"熊本市",en:"Kumamoto City",ru:"г. Кумамото"},fact:{ja:"熊本城と阿蘇山が有名。くまモンの故郷。",en:"Famous for Kumamoto Castle, Mt. Aso, and Kumamon mascot.",ru:"Замок Кумамото, вулкан Асо и талисман Кумамон."}},
+  "44":{ja:"大分県",en:"Oita",ru:"Оита",cap:{ja:"大分市",en:"Oita City",ru:"г. Оита"},fact:{ja:"温泉の湧出量が日本一。別府と由布院が有名。",en:"Japan's top hot spring source. Beppu and Yufuin are famous.",ru:"Больше всего горячих источников в Японии."}},
+  "45":{ja:"宮崎県",en:"Miyazaki",ru:"Миядзаки",cap:{ja:"宮崎市",en:"Miyazaki City",ru:"г. Миядзаки"},fact:{ja:"日南海岸とマンゴーが有名。",en:"Famous for Nichinan Coast and mangoes.",ru:"Известна побережьем Нитинан и манго."}},
+  "46":{ja:"鹿児島県",en:"Kagoshima",ru:"Кагосима",cap:{ja:"鹿児島市",en:"Kagoshima City",ru:"г. Кагосима"},fact:{ja:"桜島は活火山として有名。屋久島は世界遺産。",en:"Sakurajima is an active volcano. Yakushima is UNESCO.",ru:"Вулкан Сакурадзима. Якусима — объект ЮНЕСКО."}},
+  "47":{ja:"沖縄県",en:"Okinawa",ru:"Окинава",cap:{ja:"那覇市",en:"Naha",ru:"Наха"},fact:{ja:"日本最南端の県。首里城と美しい海が有名。",en:"Japan's southernmost prefecture. Shuri Castle and beaches.",ru:"Самая южная префектура. Замок Сюридзё и пляжи."}}
+};
+
+// ── Region data ──
+const regionData = {
+  "01":"北海道", "02":"東北", "03":"東北", "04":"東北", "05":"東北", "06":"東北", "07":"東北",
+  "08":"関東", "09":"関東", "10":"関東", "11":"関東", "12":"関東", "13":"関東", "14":"関東",
+  "15":"中部", "16":"中部", "17":"中部", "18":"中部", "19":"中部", "20":"中部", "21":"中部", "22":"中部", "23":"中部",
+  "24":"近畿", "25":"近畿", "26":"近畿", "27":"近畿", "28":"近畿", "29":"近畿", "30":"近畿",
+  "31":"中国", "32":"中国", "33":"中国", "34":"中国", "35":"中国",
+  "36":"四国", "37":"四国", "38":"四国", "39":"四国",
+  "40":"九州", "41":"九州", "42":"九州", "43":"九州", "44":"九州", "45":"九州", "46":"九州",
+  "47":"沖縄"
+};
+
+const regionDataEn = {
+  "01":"Hokkaido", "02":"Tohoku", "03":"Tohoku", "04":"Tohoku", "05":"Tohoku", "06":"Tohoku", "07":"Tohoku",
+  "08":"Kanto", "09":"Kanto", "10":"Kanto", "11":"Kanto", "12":"Kanto", "13":"Kanto", "14":"Kanto",
+  "15":"Chubu", "16":"Chubu", "17":"Chubu", "18":"Chubu", "19":"Chubu", "20":"Chubu", "21":"Chubu", "22":"Chubu", "23":"Chubu",
+  "24":"Kinki", "25":"Kinki", "26":"Kinki", "27":"Kinki", "28":"Kinki", "29":"Kinki", "30":"Kinki",
+  "31":"Chugoku", "32":"Chugoku", "33":"Chugoku", "34":"Chugoku", "35":"Chugoku",
+  "36":"Shikoku", "37":"Shikoku", "38":"Shikoku", "39":"Shikoku",
+  "40":"Kyushu", "41":"Kyushu", "42":"Kyushu", "43":"Kyushu", "44":"Kyushu", "45":"Kyushu", "46":"Kyushu",
+  "47":"Okinawa"
+};
+
+const regionDataRu = {
+  "01":"Хоккайдо", "02":"Тохоку", "03":"Тохоку", "04":"Тохоку", "05":"Тохоку", "06":"Тохоку", "07":"Тохоку",
+  "08":"Канто", "09":"Канто", "10":"Канто", "11":"Канто", "12":"Канто", "13":"Канто", "14":"Канто",
+  "15":"Тюбу", "16":"Тюбу", "17":"Тюбу", "18":"Тюбу", "19":"Тюбу", "20":"Тюбу", "21":"Тюбу", "22":"Тюбу", "23":"Тюбу",
+  "24":"Кинки", "25":"Кинки", "26":"Кинки", "27":"Кинки", "28":"Кинки", "29":"Кинки", "30":"Кинки",
+  "31":"Тюгоку", "32":"Тюгоку", "33":"Тюгоку", "34":"Тюгоку", "35":"Тюгоку",
+  "36":"Сикоку", "37":"Сикоку", "38":"Сикоку", "39":"Сикоку",
+  "40":"Кюсю", "41":"Кюсю", "42":"Кюсю", "43":"Кюсю", "44":"Кюсю", "45":"Кюсю", "46":"Кюсю",
+  "47":"Окинава"
+};
+
+let lang = "ja";
+let playerName = "";
+let diffQ = 10;            // chosen difficulty (10 / 20 / 47)
+let totalQ = 10;           // real number of questions in this game
+let gameMode = "choice";   // "choice" = 4択, "map" = find on map
+let gameRegion = "all";    // key of REGION_GROUPS
+let weakFirst = false;     // 苦手モード
+let questions = [], current = 0, score = 0, answered = false;
+let japanTopo = null, prefFeatures = [];
+let hintUsed = false;
+let hintsLeft = 1;
+let gameHintsUsed = 0;
+const hintsByDiff = {10:1, 20:2, 47:3};
+let streak = 0, bestStreak = 0;
+let timerInterval = null;
+let timerMax = 15;
+let timerSec = 15;
+let qStartTime = 0, totalAnswerTime = 0;
+let mapClicked = null;     // prefecture clicked in map mode
+let mapCandidates = null;  // hint candidates in map mode
+let audioCtx = null;
+let isDark = false;
+let newAchievements = [];
+const SVG_NS = "http://www.w3.org/2000/svg";
+const DEFAULT_VIEWBOX = [0, 0, 850, 680];
+
+// ── Region groups (for region quiz + map hints) ──
+function idRange(a, b) {
+  const out = [];
+  for (let i = a; i <= b; i++) out.push(String(i).padStart(2, "0"));
+  return out;
+}
+const REGION_GROUPS = {
+  all: null,
+  hokkaido_tohoku: idRange(1, 7),
+  kanto:           idRange(8, 14),
+  chubu:           idRange(15, 23),
+  kinki:           idRange(24, 30),
+  chugoku_shikoku: idRange(31, 39),
+  kyushu_okinawa:  idRange(40, 47),
+};
+const REGION_LABELS = {
+  all:             {ja:"全国",         en:"All Japan",          ru:"Вся Япония"},
+  hokkaido_tohoku: {ja:"北海道・東北", en:"Hokkaido & Tohoku",  ru:"Хоккайдо и Тохоку"},
+  kanto:           {ja:"関東",         en:"Kanto",              ru:"Канто"},
+  chubu:           {ja:"中部",         en:"Chubu",              ru:"Тюбу"},
+  kinki:           {ja:"近畿",         en:"Kinki",              ru:"Кинки"},
+  chugoku_shikoku: {ja:"中国・四国",   en:"Chugoku & Shikoku",  ru:"Тюгоку и Сикоку"},
+  kyushu_okinawa:  {ja:"九州・沖縄",   en:"Kyushu & Okinawa",   ru:"Кюсю и Окинава"},
+};
+function groupOf(id) {
+  return Object.keys(REGION_GROUPS).find(k => REGION_GROUPS[k] && REGION_GROUPS[k].includes(id));
+}
+
+// ── Per-player, per-prefecture stats (used by 苦手モード + progress map) ──
+function loadAllPrefStats() {
+  try { return JSON.parse(localStorage.getItem("jmq_pref_stats")) || {}; } catch(e) { return {}; }
+}
+function getPrefStats(name) { return loadAllPrefStats()[normName(name)] || {}; }
+function recordPref(id, ok) {
+  try {
+    const all = loadAllPrefStats();
+    const k = normName(playerName);
+    all[k] = all[k] || {};
+    const s = all[k][id] || {c:0, w:0};
+    if (ok) s.c++; else s.w++;
+    all[k][id] = s;
+    localStorage.setItem("jmq_pref_stats", JSON.stringify(all));
+  } catch(e) {}
+}
+// Name for the progress map / achievements when not in a game
+function profileName() {
+  const typed = document.getElementById("name-input").value.trim();
+  if (typed) return typed;
+  if (playerName) return playerName;
+  try {
+    const h = JSON.parse(localStorage.getItem("jmq_history")) || [];
+    if (h.length) return h[0].name;
+  } catch(e) {}
+  return "Player";
+}
+
+// ── Audio (Web Audio API) ──
+function getAudio() {
+  if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+  return audioCtx;
+}
+
+function playTone(freq, type, duration, vol = 0.15, delay = 0) {
+  try {
+    const ctx = getAudio();
+    const o = ctx.createOscillator();
+    const g = ctx.createGain();
+    o.connect(g); g.connect(ctx.destination);
+    o.type = type;
+    o.frequency.value = freq;
+    g.gain.setValueAtTime(vol, ctx.currentTime + delay);
+    g.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + delay + duration);
+    o.start(ctx.currentTime + delay);
+    o.stop(ctx.currentTime + delay + duration);
+  } catch(e){}
+}
+
+function soundCorrect() {
+  playTone(523, "sine", 0.1, 0.12);
+  playTone(659, "sine", 0.1, 0.12, 0.12);
+  playTone(784, "sine", 0.2, 0.14, 0.24);
+}
+
+function soundWrong() {
+  playTone(300, "sawtooth", 0.12, 0.12);
+  playTone(250, "sawtooth", 0.18, 0.12, 0.15);
+}
+
+function soundTick() {
+  playTone(880, "sine", 0.05, 0.05);
+}
+
+function soundTimeout() {
+  playTone(220, "triangle", 0.3, 0.1);
+}
+
+// ── Confetti ──
+function launchConfetti() {
+  const container = document.getElementById("confetti-container");
+  const colors = ["#E84040","#F5A623","#27AE60","#12213A","#7C3AED","#0EA5E9"];
+  const shapes = ["■","●","▲","★","♦"];
+  for (let i = 0; i < 60; i++) {
+    const el = document.createElement("div");
+    el.className = "confetti-piece";
+    el.textContent = shapes[Math.floor(Math.random() * shapes.length)];
+    el.style.left = Math.random() * 100 + "vw";
+    el.style.color = colors[Math.floor(Math.random() * colors.length)];
+    el.style.fontSize = (8 + Math.random() * 12) + "px";
+    el.style.animationDuration = (1.5 + Math.random() * 2) + "s";
+    el.style.animationDelay = Math.random() * 0.6 + "s";
+    container.appendChild(el);
+    setTimeout(() => el.remove(), 4000);
+  }
+}
+
+// ── Timer ──
+function startTimer() {
+  stopTimer();
+  timerSec = timerMax;
+  updateTimerUI();
+  timerInterval = setInterval(() => {
+    timerSec--;
+    updateTimerUI();
+    if (timerSec <= 5 && timerSec > 0) soundTick();
+    if (timerSec <= 0) {
+      stopTimer();
+      onTimeout();
+    }
+  }, 1000);
+}
+
+function stopTimer() {
+  if (timerInterval) { clearInterval(timerInterval); timerInterval = null; }
+}
+
+function updateTimerUI() {
+  const arc = document.getElementById("timer-arc");
+  const num = document.getElementById("timer-num");
+  if (!arc || !num) return;
+  const circumference = 132;
+  const pct = timerSec / timerMax;
+  arc.style.strokeDashoffset = circumference * (1 - pct);
+  num.textContent = timerSec;
+
+  const isDanger = timerSec <= 4;
+  const isWarn = !isDanger && timerSec <= timerMax / 2;
+  arc.className.baseVal = "timer-arc" + (isDanger ? " danger" : isWarn ? " warn" : "");
+  num.className = "timer-num" + (isDanger ? " danger" : isWarn ? " warn" : "");
+}
+
+function onTimeout() {
+  if (answered) return;
+  questions[current].picked = null;
+  finishAnswer(false, null, true);
+}
+
+// ── Dark Theme ──
+function toggleTheme() {
+  isDark = !isDark;
+  document.documentElement.setAttribute("data-theme", isDark ? "dark" : "");
+  document.getElementById("theme-btn").textContent = isDark ? "☀️" : "🌙";
+  try { localStorage.setItem("jmq_theme", isDark ? "dark" : "light"); } catch(e){}
+}
+
+// ── Streak ──
+function updateStreak(correct) {
+  if (correct) {
+    streak++;
+    bestStreak = Math.max(bestStreak, streak);
+    if (streak === 5) unlock("streak5");
+    if (streak === 10) unlock("streak10");
+  } else {
+    streak = 0;
+  }
+  const badge = document.getElementById("streak-badge");
+  if (!badge) return;
+  if (streak >= 2) {
+    badge.innerHTML = `${streak >= 5 ? "⚡" : "🔥"} <span id="streak-num">${streak}</span>`;
+    badge.className = "streak-badge";
+    void badge.offsetWidth; // retrigger pop animation
+    badge.className = "streak-badge show";
+  } else {
+    badge.className = "streak-badge";
+  }
+}
+
+// ── Hint ──
+// 4択: removes 2 wrong options. Map mode: highlights 3 candidates (1 correct).
+function useHint() {
+  if (hintUsed || answered || hintsLeft <= 0) return;
+  hintUsed = true;
+  hintsLeft--;
+  gameHintsUsed++;
+  const q = questions[current];
+  if (gameMode === "map") {
+    const group = REGION_GROUPS[groupOf(q.correct)];
+    const others = shuffle(group.filter(i => i !== q.correct)).slice(0, 2);
+    mapCandidates = [q.correct, ...others];
+    renderQuizMap();
+  } else {
+    q.eliminated = shuffle(q.opts.filter(i => i !== q.correct)).slice(0, 2);
+    renderOptions();
+  }
+  updateHintBtn();
+}
+
+function updateHintBtn() {
+  const hb = document.getElementById("hint-btn");
+  const t = T[lang];
+  if (hintsLeft <= 0) {
+    hb.disabled = true;
+    hb.innerHTML = `✗ <span>${t.hintUsed}</span>`;
+  } else {
+    hb.disabled = answered || hintUsed;
+    hb.innerHTML = `💡 <span>${t.hintBtn} (${hintsLeft})</span>`;
+  }
+}
+
+// ── Region Stats ──
+function calcRegionStats() {
+  const stats = {};
+  questions.forEach((q, i) => {
+    const region = regionData[q.correct] || "?";
+    if (!stats[region]) stats[region] = { correct: 0, total: 0 };
+    stats[region].total++;
+    if (q._answered === true) stats[region].correct++;
+  });
+  return stats;
+}
+
+function renderRegionStats() {
+  const card = document.getElementById("region-stats-card");
+  const body = document.getElementById("rs-body");
+  const stats = calcRegionStats();
+
+  // Only show if we have data
+  const regions = Object.keys(stats);
+  if (!regions.length) { card.style.display = "none"; return; }
+  card.style.display = "block";
+
+  const regionColors = {
+    "北海道":"#4C9BE8","東北":"#5BAD6F","関東":"#E84040","中部":"#F5A623",
+    "近畿":"#9B59B6","中国":"#1ABC9C","四国":"#E67E22","九州":"#E91E63","沖縄":"#00BCD4"
+  };
+  const regionNamesEn = {
+    "北海道":"Hokkaido","東北":"Tohoku","関東":"Kanto","中部":"Chubu",
+    "近畿":"Kinki","中国":"Chugoku","四国":"Shikoku","九州":"Kyushu","沖縄":"Okinawa"
+  };
+  const regionNamesRu = {
+    "北海道":"Хоккайдо","東北":"Тохоку","関東":"Канто","中部":"Тюбу",
+    "近畿":"Кинки","中国":"Тюгоку","四国":"Сикоку","九州":"Кюсю","沖縄":"Окинава"
+  };
+
+  // Title
+  const titleEl = document.getElementById("rs-title-txt");
+  titleEl.textContent = lang==="ja"?"地域別成績":lang==="en"?"Results by Region":"Статистика по регионам";
+
+  body.innerHTML = regions.map(r => {
+    const { correct, total } = stats[r];
+    const pct = total ? Math.round(correct/total*100) : 0;
+    const color = regionColors[r] || "#888";
+    const displayName = lang==="en" ? (regionNamesEn[r]||r) : lang==="ru" ? (regionNamesRu[r]||r) : r;
+    const pctColor = pct >= 70 ? "#27AE60" : pct >= 40 ? "#F5A623" : "#E84040";
+    return `<div class="rs-row">
+      <div class="rs-name">${displayName}</div>
+      <div class="rs-bar-track">
+        <div class="rs-bar-fill" style="width:${pct}%;background:${color}"></div>
+      </div>
+      <div class="rs-pct" style="color:${pctColor}">${correct}/${total}</div>
+    </div>`;
+  }).join("");
+}
+
+// ── i18n ──
+function setLang(l) {
+  lang = l;
+  document.querySelectorAll(".lang-btn").forEach(b => {
+    const map = {ja:"日本語", en:"English", ru:"Русский"};
+    b.classList.toggle("active", b.textContent === map[l]);
+  });
+  applyLang();
+}
+
+function setText(id, v) { const el = document.getElementById(id); if (el) el.textContent = v; }
+function setHTML(id, v) { const el = document.getElementById(id); if (el) el.innerHTML = v; }
+
+function applyLang() {
+  const t = T[lang];
+  setText("loading-txt", t.loading);
+  setHTML("s-title", t.title);
+  setText("s-sub", t.sub);
+  setText("s-name-lbl", t.nameLbl);
+  document.getElementById("name-input").placeholder = t.namePh;
+  setText("s-diff-lbl", t.diffLbl);
+  setText("d1", t.d1); setText("d2", t.d2); setText("d3", t.d3);
+  setText("s-mode-lbl", t.modeLbl);
+  setText("m1", t.m1); setText("m1s", t.m1s);
+  setText("m2", t.m2); setText("m2s", t.m2s);
+  setText("s-region-lbl", t.regionLbl);
+  fillRegionSelect();
+  setText("weak-title", t.weakTitle);
+  setText("weak-desc", t.weakDesc);
+  setText("s-start-btn", t.startBtn);
+  setText("s-study-btn", t.studyBtn);
+  setText("s-stat1", t.stat1); setText("s-stat2", t.stat2); setText("s-stat3", t.stat3);
+  setText("next-btn", t.nextBtn);
+  setText("lb-title-txt", t.lbTitle);
+  setText("lb-update-txt", t.lbTop);
+  setText("res-home-btn", t.homeBtn);
+  setText("res-play-btn", t.playBtn);
+  setText("study-title", t.studyTitle);
+  setText("study-back-btn", t.studyBackBtn);
+  setText("study-hint-txt", t.studyHint);
+  setText("svt-n", t.svtNormal);
+  setText("svt-p", t.svtProgress);
+  setText("history-title-txt", t.historyTitle);
+  setText("s-hist-lbl", t.historyBtn);
+  setText("s-ach-lbl", t.achBtn);
+  setText("hm-title", "📋 " + t.historyTitle);
+  setText("hm-clear-btn", t.historyClear);
+  setText("study-list-title", t.prefListTitle);
+  setHTML("study-empty-txt", t.studyEmptyTxt);
+
+  if (questions.length > 0 && current < questions.length) {
+    updateHintBtn();
+    renderQuestion();
+  }
+  if (document.getElementById("study-screen").classList.contains("visible")) {
+    buildStudyLegend();
+    drawStudyMap(studySelected);
+    if (studySelected) selectStudyPref(studySelected);
+  }
+}
+
+function fillRegionSelect() {
+  const sel = document.getElementById("region-select");
+  sel.innerHTML = Object.keys(REGION_LABELS).map(k => {
+    const n = REGION_GROUPS[k] ? REGION_GROUPS[k].length : 47;
+    return `<option value="${k}">${REGION_LABELS[k][lang]} (${n})</option>`;
+  }).join("");
+  sel.value = gameRegion;
+}
+
+function setDiff(el, n) {
+  document.querySelectorAll(".diff-btn").forEach(b => b.classList.remove("active"));
+  el.classList.add("active");
+  diffQ = n;
+}
+
+function setMode(m) {
+  gameMode = m;
+  document.querySelectorAll(".mode-btn").forEach(b => b.classList.toggle("active", b.dataset.mode === m));
+}
+
+// ── Map ──
+async function loadMap() {
+  const r = await fetch("https://unpkg.com/jpn-atlas@1/japan/japan.json");
+  japanTopo = await r.json();
+  prefFeatures = topojson.feature(japanTopo, japanTopo.objects.prefectures).features;
+}
+
+function mapColors() {
+  return isDark
+    ? {base:"#3A4D66", dim:"#1F2B3B", stroke:"#0F1923", hover:"#5B7BA6", cand:"#F5A623"}
+    : {base:"#D8D5CD", dim:"#EEECE7", stroke:"#FFFFFF", hover:"#A9B8D0", cand:"#F5C66B"};
+}
+
+// Zoom the map to a region (keeps the 850:680 shape so the layout doesn't jump)
+function setMapViewBox(svg, ids) {
+  if (!ids) { svg.setAttribute("viewBox", DEFAULT_VIEWBOX.join(" ")); return; }
+  const path = d3.geoPath();
+  let x0 = Infinity, y0 = Infinity, x1 = -Infinity, y1 = -Infinity;
+  prefFeatures.forEach(f => {
+    if (!ids.includes(f.id)) return;
+    const [[a, b], [c, d]] = path.bounds(f);
+    x0 = Math.min(x0, a); y0 = Math.min(y0, b); x1 = Math.max(x1, c); y1 = Math.max(y1, d);
+  });
+  if (!isFinite(x0)) { svg.setAttribute("viewBox", DEFAULT_VIEWBOX.join(" ")); return; }
+  let w = (x1 - x0) * 1.15, h = (y1 - y0) * 1.15;
+  const ratio = DEFAULT_VIEWBOX[2] / DEFAULT_VIEWBOX[3];
+  if (w / h > ratio) h = w / ratio; else w = h * ratio;
+  const cx = (x0 + x1) / 2, cy = (y0 + y1) / 2;
+  svg.setAttribute("viewBox", `${cx - w/2} ${cy - h/2} ${w} ${h}`);
+}
+
+function renderQuizMap() {
+  const svg = document.getElementById("jmap");
+  svg.innerHTML = "";
+  if (!prefFeatures.length || !questions.length) return;
+  const path = d3.geoPath();
+  const q = questions[current];
+  const C = mapColors();
+  const group = REGION_GROUPS[gameRegion];
+  const isMap = gameMode === "map";
+  setMapViewBox(svg, group);
+  svg.classList.toggle("clickable", isMap && !answered);
+
+  const front = []; // highlighted shapes are drawn last so their outline is on top
+  prefFeatures.forEach(f => {
+    const id = f.id;
+    const inGroup = !group || group.includes(id);
+    let fill = inGroup ? C.base : C.dim;
+    let strokeW = 0.8, glow = null;
+
+    if (!isMap) {
+      if (id === q.correct) { fill = "#E84040"; strokeW = 2.5; glow = "rgba(232,64,64,0.6)"; }
+    } else if (answered) {
+      if (id === q.correct)      { fill = "#27AE60"; strokeW = 2.5; glow = "rgba(39,174,96,0.7)"; }
+      else if (id === mapClicked) { fill = "#E84040"; strokeW = 2; }
+    } else if (mapCandidates) {
+      fill = mapCandidates.includes(id) ? C.cand : C.dim;
+    }
+
+    const el = document.createElementNS(SVG_NS, "path");
+    el.setAttribute("d", path(f));
+    el.setAttribute("fill", fill);
+    el.setAttribute("stroke", C.stroke);
+    el.setAttribute("stroke-width", strokeW);
+    el.setAttribute("vector-effect", "non-scaling-stroke");
+    if (glow) el.style.filter = `drop-shadow(0 0 8px ${glow})`;
+
+    if (isMap && !answered) {
+      el.addEventListener("mouseenter", () => el.setAttribute("fill", C.hover));
+      el.addEventListener("mouseleave", () => el.setAttribute("fill", fill));
+      el.addEventListener("click", () => answerMap(id));
+    }
+    if (glow || (answered && id === mapClicked)) front.push(el); else svg.appendChild(el);
+  });
+  front.forEach(el => svg.appendChild(el));
+}
+
+// ── Player helpers ──
+// "Urmat", "urmat", " URMAT " → the same player
+function normName(n) { return (n || "").trim().toLowerCase().replace(/\s+/g, " "); }
+function gamesWord(n) {
+  if (lang !== "ru") return T[lang].hGames;
+  const m10 = n % 10, m100 = n % 100;
+  if (m10 === 1 && m100 !== 11) return "игра";
+  if (m10 >= 2 && m10 <= 4 && (m100 < 12 || m100 > 14)) return "игры";
+  return "игр";
+}
+function pctClass(p) { return p >= 70 ? "great" : p >= 40 ? "ok" : "low"; }
+function escapeHtml(s) {
+  return String(s).replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+}
+function groupByPlayer(hist) {
+  const map = new Map();
+  hist.forEach(h => {             // hist is newest-first
+    const key = normName(h.name);
+    if (!map.has(key)) map.set(key, { name: h.name, games: [] });
+    map.get(key).games.push(h);
+  });
+  return [...map.values()].map(pl => {
+    const pcts = pl.games.map(g => g.score / g.total);
+    pl.avg = Math.round(pcts.reduce((a, b) => a + b, 0) / pcts.length * 100);
+    pl.best = pl.games.reduce((b, g) => (g.score / g.total > b.score / b.total ? g : b));
+    return pl;
+  });
+}
+
+// Small label like "🗾 関東" for a history entry
+function gameTag(h) {
+  const icon = h.mode === "map" ? "🗾" : "🔤";
+  const reg = h.region && h.region !== "all" && REGION_LABELS[h.region] ? " " + REGION_LABELS[h.region][lang] : "";
+  return `<span class="hm-tag">${icon}${reg}</span>`;
+}
+
+// ── History Modal ──
+function openHistoryModal() {
+  const t = T[lang];
+  document.getElementById("hm-title").textContent = "📋 " + t.historyTitle;
+  document.getElementById("hm-clear-btn").textContent = t.historyClear;
+  let hist = [];
+  try { hist = JSON.parse(localStorage.getItem("jmq_history")) || []; } catch(e){}
+  const body = document.getElementById("hm-body");
+  if (!hist.length) {
+    body.innerHTML = `<div class="hm-empty">📭 ${t.hEmpty}</div>`;
+  } else {
+    body.innerHTML = groupByPlayer(hist).map(pl => {
+      const games = pl.games.map(h => {
+        const pct = Math.round(h.score / h.total * 100);
+        return `<div class="hm-row">
+          <span class="hm-date">${h.date}</span>
+          <span class="hm-name">${gameTag(h)}</span>
+          <span class="hm-pct ${pctClass(pct)}">${pct}%</span>
+          <span class="hm-score">${h.score}/${h.total}</span>
+        </div>`;
+      }).join("");
+      return `<div class="hp-player">
+        <div class="hp-head" onclick="this.parentElement.classList.toggle('open')">
+          <div class="hp-avatar">${escapeHtml(pl.name.charAt(0).toUpperCase())}</div>
+          <div class="hp-info">
+            <div class="hp-name">${escapeHtml(pl.name)}</div>
+            <div class="hp-meta">${pl.games.length} ${gamesWord(pl.games.length)} · ${t.hAvg} ${pl.avg}% · ${pl.games[0].date}</div>
+          </div>
+          <div class="hp-best">
+            <div class="hp-best-num">${pl.best.score}/${pl.best.total}</div>
+            <div class="hp-best-lbl">${t.hBest}</div>
+          </div>
+          <span class="hp-arrow">▶</span>
+        </div>
+        <div class="hp-games">${games}</div>
+      </div>`;
+    }).join("");
+  }
+  document.getElementById("history-modal").classList.add("open");
+}
+
+function closeHistoryModal() {
+  document.getElementById("history-modal").classList.remove("open");
+}
+
+function clearHistory() {
+  try { localStorage.removeItem("jmq_history"); } catch(e){}
+  document.getElementById("hm-body").innerHTML = `<div class="hm-empty">📭 ${T[lang].hEmpty}</div>`;
+}
+
+document.getElementById("ach-modal").addEventListener("click", function(e) {
+  if (e.target === this) closeAchModal();
+});
+// Close modal when clicking outside
+document.getElementById("history-modal").addEventListener("click", function(e) {
+  if (e.target === this) closeHistoryModal();
+});
+
+// ── Study Mode ──
+let studySelected = null;
+let studyView = "normal"; // "normal" | "progress"
+
+function openStudyMode() {
+  show("study-screen");
+  buildStudyLegend();
+  setStudyView(studyView);
+}
+
+function setStudyView(v) {
+  studyView = v;
+  document.getElementById("svt-normal").classList.toggle("active", v === "normal");
+  document.getElementById("svt-progress").classList.toggle("active", v === "progress");
+  drawStudyMap(studySelected);
+  renderProgressLegend();
+}
+
+// Colour for one prefecture in progress view
+function progressColor(s) {
+  if (!s || (s.c + s.w) === 0) return isDark ? "#3A4D66" : "#D8D5CD";
+  const acc = s.c / (s.c + s.w);
+  if (acc >= 0.8) return "#5CC98A";
+  if (acc >= 0.5) return "#F5C66B";
+  return "#F08080";
+}
+
+function renderProgressLegend() {
+  const box = document.getElementById("progress-legend");
+  if (studyView !== "progress") { box.classList.remove("show"); return; }
+  const t = T[lang];
+  const name = profileName();
+  const st = getPrefStats(name);
+  const ids = Object.keys(st);
+  let c = 0, all = 0;
+  ids.forEach(id => { c += st[id].c; all += st[id].c + st[id].w; });
+  const pct = all ? Math.round(c / all * 100) : 0;
+  const summary = t.progSummary.replace("{n}", ids.length).replace("{p}", pct);
+  const sw = (color, label) => `<span><i class="pl-sw" style="background:${color}"></i>${label}</span>`;
+  box.innerHTML = `
+    <div class="pl-summary">👤 ${escapeHtml(name)} — ${summary}</div>
+    ${sw("#5CC98A", t.lgGood)}${sw("#F5C66B", t.lgMid)}${sw("#F08080", t.lgBad)}${sw(isDark ? "#3A4D66" : "#D8D5CD", t.lgNone)}`;
+  box.classList.add("show");
+}
+
+function drawStudyMap(selectedId = null) {
+  const svg = document.getElementById("study-jmap");
+  svg.innerHTML = "";
+  if (!prefFeatures.length) return;
+  const path = d3.geoPath();
+  const progress = studyView === "progress";
+  const st = progress ? getPrefStats(profileName()) : {};
+  const labels = [];
+  let selEl = null;
+
+  prefFeatures.forEach(f => {
+    const isSel = f.id === selectedId;
+    const base = progress ? progressColor(st[f.id]) : "#9EC8E0";
+    const hover = progress ? base : "#6AAFC9";
+    const fill = isSel && !progress ? "#E84040" : base;
+    const el = document.createElementNS(SVG_NS, "path");
+    el.setAttribute("d", path(f));
+    el.setAttribute("fill", fill);
+    el.setAttribute("stroke", isSel && progress ? "#12213A" : "#fff");
+    el.setAttribute("stroke-width", isSel ? (progress ? "3" : "2") : "0.7");
+    el.style.cursor = "pointer";
+    el.style.transition = "fill 0.12s, opacity 0.12s";
+    el.addEventListener("mouseenter", () => { if (!isSel) { el.setAttribute("fill", hover); if (progress) el.style.opacity = "0.75"; } });
+    el.addEventListener("mouseleave", () => { if (!isSel) { el.setAttribute("fill", fill); el.style.opacity = "1"; } });
+    el.addEventListener("click", () => selectStudyPref(f.id));
+    if (isSel) selEl = el; else svg.appendChild(el);
+
+    // Short label
+    try {
+      const centroid = path.centroid(f);
+      const p = prefData[f.id];
+      if (p && centroid && !isNaN(centroid[0])) {
+        const txt = document.createElementNS(SVG_NS, "text");
+        txt.setAttribute("x", centroid[0]);
+        txt.setAttribute("y", centroid[1]);
+        txt.setAttribute("class", "map-label");
+        txt.setAttribute("fill", isSel && !progress ? "#fff" : "#12213A");
+        txt.style.pointerEvents = "none";
+        txt.textContent = f.id === "01" ? p.ja : p.ja.replace(/[都府県]$/, "");
+        labels.push(txt);
+      }
+    } catch(e) {}
+  });
+  if (selEl) svg.appendChild(selEl);
+  labels.forEach(l => svg.appendChild(l));
+}
+
+function selectStudyPref(id) {
+  studySelected = id;
+  drawStudyMap(id);
+  const p = prefData[id];
+  if (!p) return;
+  const t = T[lang];
+
+  document.getElementById("sip-num").textContent = id;
+  document.getElementById("sip-name").textContent = p[lang];
+  const subs = [];
+  if (lang !== "ja") subs.push(p.ja);
+  if (lang !== "en") subs.push(p.en);
+  if (lang !== "ru") subs.push(p.ru);
+  document.getElementById("sip-name-sub").textContent = subs.join(" / ");
+
+  setText("sip-cap-lbl", t.studyCapLbl);
+  setText("sip-cap", p.cap[lang]);
+  setText("sip-region-lbl", t.studyRegionLbl);
+  const regionMap = lang === "en" ? regionDataEn : lang === "ru" ? regionDataRu : regionData;
+  setText("sip-region", regionMap[id] || "");
+  setText("sip-fact-lbl", t.studyFactLbl);
+  setText("sip-fact", p.fact[lang]);
+
+  // Personal result for this prefecture
+  setText("sip-your-lbl", t.studyYourLbl);
+  const s = getPrefStats(profileName())[id];
+  if (s && s.c + s.w > 0) {
+    const tot = s.c + s.w;
+    const pct = Math.round(s.c / tot * 100);
+    setHTML("sip-your", `<strong>${s.c} / ${tot}</strong> (${pct}%)`);
+  } else {
+    setText("sip-your", t.noData);
+  }
+
+  document.getElementById("study-empty-panel").style.display = "none";
+  document.getElementById("study-info-panel").classList.add("show");
+
+  document.querySelectorAll(".legend-item").forEach(li => {
+    li.classList.toggle("active", li.dataset.id === id);
+    if (li.dataset.id === id) li.scrollIntoView({ block: "nearest" });
+  });
+}
+
+function buildStudyLegend() {
+  const container = document.getElementById("study-legend");
+  container.innerHTML = "";
+  Object.keys(prefData).sort().forEach(id => {
+    const p = prefData[id];
+    const item = document.createElement("div");
+    item.className = "legend-item";
+    item.dataset.id = id;
+    const sub = lang === "ja" ? p.en : p.ja;
+    item.innerHTML = `<div class="legend-num">${id}</div><div><div class="legend-name">${p[lang]}</div><div class="legend-sub">${sub}</div></div>`;
+    item.addEventListener("click", () => selectStudyPref(id));
+    container.appendChild(item);
+  });
+}
+
+// ── Quiz logic ──
+// Fisher–Yates shuffle (fair, unlike sort(random))
+function shuffle(a) {
+  const r = [...a];
+  for (let i = r.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [r[i], r[j]] = [r[j], r[i]];
+  }
+  return r;
+}
+
+// Pick n items without repeats; items with bigger weight are picked more often
+function weightedPick(items, n, weightFn) {
+  const pool = [...items], out = [];
+  while (out.length < n && pool.length) {
+    const ws = pool.map(weightFn);
+    let r = Math.random() * ws.reduce((a, b) => a + b, 0);
+    let i = 0;
+    for (; i < pool.length - 1; i++) { r -= ws[i]; if (r <= 0) break; }
+    out.push(pool.splice(i, 1)[0]);
+  }
+  return out;
+}
+
+// 苦手モード weight: many mistakes → high weight, never asked → slightly higher than normal
+function weakWeight(s) {
+  if (!s) return 1.5;
+  return (1 + s.w * 3) / (1 + s.c);
+}
+
+function buildQuestions() {
+  const all = Object.keys(prefData);
+  const pool = REGION_GROUPS[gameRegion] || all;
+  totalQ = Math.min(diffQ, pool.length);
+  let picked;
+  if (weakFirst) {
+    const st = getPrefStats(playerName);
+    picked = weightedPick(pool, totalQ, id => weakWeight(st[id]));
+  } else {
+    picked = shuffle(pool).slice(0, totalQ);
+  }
+  // In a region quiz the wrong options come from the same region (harder, more useful)
+  const distractFrom = gameRegion !== "all" ? pool : all;
+  questions = picked.map(id => {
+    const wrong = shuffle(distractFrom.filter(i => i !== id)).slice(0, 3);
+    return { correct: id, opts: shuffle([id, ...wrong]), eliminated: [], picked: null };
+  });
+}
+
+function renderQuestion() {
+  const t = T[lang];
+  const q = questions[current];
+  const isMap = gameMode === "map";
+  document.getElementById("options").style.display = isMap ? "none" : "grid";
+  document.getElementById("q-label").style.display = isMap ? "none" : "block";
+  const mq = document.getElementById("map-q");
+  mq.style.display = isMap ? "block" : "none";
+  if (isMap) {
+    const p = prefData[q.correct];
+    const sub = lang === "ja" ? p.en : p.ja;
+    mq.innerHTML = t.mapQ.replace("{x}", `<strong class="q-target">${p[lang]}</strong><span class="q-target-sub">${sub}</span>`);
+  } else {
+    document.getElementById("q-label").innerHTML = t.qlabel;
+    renderOptions();
+  }
+  renderQuizMap();
+}
+
+function renderOptions() {
+  const q = questions[current];
+  const c = document.getElementById("options");
+  c.innerHTML = "";
+  q.opts.forEach(id => {
+    const p = prefData[id];
+    const btn = document.createElement("button");
+    btn.className = "opt";
+    const sub = lang === "ja" ? p.en : p.ja;
+    btn.innerHTML = `<span class="opt-jp">${p[lang]}</span><span class="opt-en">${sub}</span>`;
+    if (answered) {
+      btn.disabled = true;
+      if (id === q.correct) btn.classList.add("correct");
+      else if (id === q.picked) btn.classList.add("wrong");
+    } else if (q.eliminated.includes(id)) {
+      btn.disabled = true;
+      btn.classList.add("eliminated");
+    } else {
+      btn.onclick = () => answer(id);
+    }
+    c.appendChild(btn);
+  });
+}
+
+function renderInfoCard() {
+  const card = document.getElementById("info-card");
+  if (!answered) { card.style.display = "none"; return; }
+  const t = T[lang];
+  const p = prefData[questions[current].correct];
+  document.getElementById("ic-name").textContent = p[lang];
+  document.getElementById("ic-cap").textContent = t.capLbl + p.cap[lang];
+  document.getElementById("ic-fact").textContent = p.fact[lang];
+  card.style.display = "block";
+}
+
+function updateTopBar() {
+  const done = Math.min(current + (answered ? 1 : 0), totalQ);
+  document.getElementById("q-counter").textContent = `${current + 1} / ${totalQ}`;
+  document.getElementById("progress-fill").style.width = `${Math.round(done / totalQ * 100)}%`;
+  document.getElementById("score-badge").textContent = `${score} / ${done}`;
+}
+
+// 4択 answer
+function answer(id) {
+  if (answered) return;
+  questions[current].picked = id;
+  finishAnswer(id === questions[current].correct, id);
+}
+
+// Map-mode answer
+function answerMap(id) {
+  if (answered) return;
+  mapClicked = id;
+  questions[current].picked = id;
+  finishAnswer(id === questions[current].correct, id);
+}
+
+// Shared by 4択, map mode and timeout
+function finishAnswer(ok, pickedId, timedOut = false) {
+  answered = true;
+  stopTimer();
+  const t = T[lang];
+  const q = questions[current];
+  q._answered = ok;
+  totalAnswerTime += Math.min(timerMax, (Date.now() - qStartTime) / 1000);
+  recordPref(q.correct, ok);
+
+  const correctName = prefData[q.correct][lang];
+  const fb = document.getElementById("feedback");
+  if (ok) {
+    score++;
+    fb.textContent = t.correct;
+    fb.className = "ok";
+    soundCorrect();
+    launchConfetti();
+  } else {
+    if (timedOut) {
+      fb.textContent = t.timeout + " " + correctName;
+      soundTimeout();
+    } else if (gameMode === "map") {
+      fb.textContent = t.mapWrong.replace("{x}", prefData[pickedId][lang]) + " " + correctName;
+      soundWrong();
+    } else {
+      fb.textContent = t.wrong + " " + correctName;
+      soundWrong();
+    }
+    fb.className = "fail";
+  }
+  updateStreak(ok);
+
+  if (gameMode === "map") renderQuizMap(); else renderOptions();
+  updateHintBtn();
+  renderInfoCard();
+  updateTopBar();
+  document.getElementById("next-btn").style.display = "block";
+}
+
+function startQuestion() {
+  answered = false;
+  hintUsed = false;
+  mapClicked = null;
+  mapCandidates = null;
+  const fb = document.getElementById("feedback");
+  fb.textContent = "";
+  fb.className = "";
+  document.getElementById("next-btn").style.display = "none";
+  document.getElementById("info-card").style.display = "none";
+  updateHintBtn();
+  renderQuestion();
+  updateTopBar();
+  qStartTime = Date.now();
+  startTimer();
+}
+
+function nextQ() {
+  current++;
+  if (current >= totalQ) { showResult(); return; }
+  startQuestion();
+  document.getElementById("quiz-screen").scrollIntoView({ behavior: "smooth", block: "start" });
+}
+
+// ── Achievements ──
+const ACH = [
+  {id:"first",    icon:"🎌", ja:["はじめの一歩","初めてゲームをクリア"],                 en:["First Steps","Finish your first game"],                          ru:["Первый шаг","Заверши первую игру"]},
+  {id:"perfect",  icon:"💯", ja:["パーフェクト","1ゲームで全問正解"],                     en:["Perfect","Get every question right in one game"],               ru:["Идеально","Все ответы верные за одну игру"]},
+  {id:"streak5",  icon:"🔥", ja:["連続5問","5問連続で正解"],                              en:["On Fire","5 correct answers in a row"],                          ru:["В ударе","5 верных ответов подряд"]},
+  {id:"streak10", icon:"⚡", ja:["連続10問","10問連続で正解"],                            en:["Unstoppable","10 correct answers in a row"],                     ru:["Неудержимый","10 верных ответов подряд"]},
+  {id:"hard",     icon:"🏔️", ja:["全国制覇","むずかしい（47問）で70%以上"],               en:["Nationwide","70%+ on Hard (all 47)"],                            ru:["Вся страна","70%+ на сложном уровне (все 47)"]},
+  {id:"nohint",   icon:"🧠", ja:["ヒント不要","ヒントなしで80%以上（10問以上）"],          en:["No Hints Needed","80%+ without hints (10+ questions)"],          ru:["Без подсказок","80%+ без подсказок (10+ вопросов)"]},
+  {id:"speed",    icon:"⏱️", ja:["スピードスター","平均5秒以内・70%以上"],                 en:["Speedster","70%+ with under 5 s per answer on average"],         ru:["Скорострел","70%+ и в среднем меньше 5 сек на ответ"]},
+  {id:"mapper",   icon:"🗺️", ja:["地図マスター","地図モードで80%以上（10問以上）"],        en:["Map Master","80%+ in Find-on-Map mode (10+ questions)"],         ru:["Мастер карты","80%+ в режиме «На карте» (10+ вопросов)"]},
+  {id:"region",   icon:"📍", ja:["地域の達人","地域クイズで全問正解"],                    en:["Local Expert","Perfect score in a region quiz"],                 ru:["Знаток региона","Всё верно в квизе по региону"]},
+  {id:"all47",    icon:"🗾", ja:["コンプリート","47都道府県すべてに1回以上正解"],          en:["Collector","Answer all 47 prefectures correctly at least once"], ru:["Коллекционер","Хотя бы раз верно ответь по всем 47 префектурам"]},
+  {id:"games10",  icon:"🎮", ja:["常連さん","10回プレイ"],                                en:["Regular","Play 10 games"],                                       ru:["Завсегдатай","Сыграй 10 игр"]},
+];
+
+function loadAllAch() {
+  try { return JSON.parse(localStorage.getItem("jmq_ach")) || {}; } catch(e) { return {}; }
+}
+function getAch(name) { return loadAllAch()[normName(name)] || {}; }
+
+function unlock(id) {
+  try {
+    const all = loadAllAch();
+    const k = normName(playerName);
+    all[k] = all[k] || {};
+    if (all[k][id]) return;
+    const now = new Date();
+    all[k][id] = now.toLocaleDateString("ja-JP", {year:"numeric", month:"2-digit", day:"2-digit"});
+    localStorage.setItem("jmq_ach", JSON.stringify(all));
+  } catch(e) { return; }
+  const a = ACH.find(x => x.id === id);
+  newAchievements.push(a);
+  showToast(a);
+}
+
+function checkEndAchievements() {
+  const pct = score / totalQ;
+  const avgTime = totalAnswerTime / totalQ;
+  unlock("first");
+  if (pct === 1) unlock("perfect");
+  if (diffQ === 47 && gameRegion === "all" && pct >= 0.7) unlock("hard");
+  if (gameHintsUsed === 0 && totalQ >= 10 && pct >= 0.8) unlock("nohint");
+  if (avgTime <= 5 && totalQ >= 5 && pct >= 0.7) unlock("speed");
+  if (gameMode === "map" && totalQ >= 10 && pct >= 0.8) unlock("mapper");
+  if (gameRegion !== "all" && pct === 1) unlock("region");
+  const st = getPrefStats(playerName);
+  if (Object.keys(prefData).every(id => st[id] && st[id].c > 0)) unlock("all47");
+  if (gamesPlayed(playerName) >= 10) unlock("games10");
+}
+
+function gamesPlayed(name) {
+  try {
+    return (JSON.parse(localStorage.getItem("jmq_history")) || []).filter(h => normName(h.name) === normName(name)).length;
+  } catch(e) { return 0; }
+}
+
+// Toast popup, one after another
+let toastQueue = [], toastBusy = false;
+function showToast(a) { toastQueue.push(a); if (!toastBusy) nextToast(); }
+function nextToast() {
+  const a = toastQueue.shift();
+  if (!a) { toastBusy = false; return; }
+  toastBusy = true;
+  const el = document.createElement("div");
+  el.className = "toast";
+  el.innerHTML = `<div class="t-ic">${a.icon}</div><div><div class="t-top">${T[lang].achUnlocked}</div><div class="t-name">${a[lang][0]}</div></div>`;
+  document.getElementById("toast-wrap").appendChild(el);
+  playTone(784, "sine", 0.12, 0.12); playTone(1047, "sine", 0.25, 0.12, 0.12);
+  setTimeout(() => { el.classList.add("out"); setTimeout(() => { el.remove(); nextToast(); }, 300); }, 2600);
+}
+
+function renderNewAchievements() {
+  const card = document.getElementById("new-ach-card");
+  if (!newAchievements.length) { card.style.display = "none"; return; }
+  card.style.display = "block";
+  setText("new-ach-title", T[lang].achNew);
+  setHTML("new-ach-body", newAchievements.map(a =>
+    `<div class="rs-row"><span style="font-size:22px">${a.icon}</span><div><b>${a[lang][0]}</b><div style="font-size:12px;color:var(--text-muted)">${a[lang][1]}</div></div></div>`
+  ).join(""));
+}
+
+function openAchModal() {
+  const t = T[lang];
+  const name = profileName();
+  const got = getAch(name);
+  const st = getPrefStats(name);
+  const count = ACH.filter(a => got[a.id]).length;
+  setHTML("ach-title", `${t.achTitle} — ${escapeHtml(name)} <span class="ach-count">${count}/${ACH.length}</span>`);
+  const progressOf = id => {
+    if (id === "all47") return [Object.keys(prefData).filter(p => st[p] && st[p].c > 0).length, 47];
+    if (id === "games10") return [Math.min(10, gamesPlayed(name)), 10];
+    return null;
+  };
+  setHTML("ach-body", `<div class="ach-grid">${ACH.map(a => {
+    const date = got[a.id];
+    const pr = !date && progressOf(a.id);
+    return `<div class="ach-card ${date ? "got" : "locked"}">
+      <div class="a-ic">${date ? a.icon : "🔒"}</div>
+      <div style="flex:1;min-width:0">
+        <div class="a-name">${a[lang][0]}</div>
+        <div class="a-desc">${a[lang][1]}</div>
+        ${date ? `<div class="a-date">✓ ${date}</div>` : ""}
+        ${pr ? `<div class="ach-bar"><div style="width:${pr[0] / pr[1] * 100}%"></div></div><div class="a-desc">${pr[0]} / ${pr[1]}</div>` : ""}
+      </div>
+    </div>`;
+  }).join("")}</div>`);
+  document.getElementById("ach-modal").classList.add("open");
+}
+function closeAchModal() { document.getElementById("ach-modal").classList.remove("open"); }
+
+// ── History ──
+function saveHistory(sc, total) {
+  try {
+    const key = "jmq_history";
+    let hist = [];
+    try { hist = JSON.parse(localStorage.getItem(key)) || []; } catch(e){}
+    const now = new Date();
+    const dateStr = now.toLocaleDateString("ja-JP",{month:"2-digit",day:"2-digit"}) + " " + now.toLocaleTimeString("ja-JP",{hour:"2-digit",minute:"2-digit"});
+    hist.unshift({ date: dateStr, score: sc, total, name: playerName, mode: gameMode, region: gameRegion });
+    if (hist.length > 100) hist = hist.slice(0, 100);
+    localStorage.setItem(key, JSON.stringify(hist));
+    return hist;
+  } catch(e){ return []; }
+}
+
+function renderHistory() {
+  let hist = [];
+  try { hist = JSON.parse(localStorage.getItem("jmq_history")) || []; } catch(e){}
+  const card = document.getElementById("history-card");
+  const list = document.getElementById("history-list");
+  const t = T[lang];
+  // Result screen: only this player's games
+  hist = hist.filter(h => normName(h.name) === normName(playerName)).slice(0, 10);
+  if (!hist.length) { card.style.display = "none"; return; }
+  card.style.display = "block";
+  document.getElementById("history-title-txt").textContent = t.historyTitle + " — " + playerName;
+  list.innerHTML = hist.map(h => {
+    const pct = Math.round(h.score / h.total * 100);
+    const cls = pct >= 70 ? "great" : pct >= 40 ? "ok" : "low";
+    return `<div class="history-row">
+      <span class="history-date">${h.date}</span>
+      ${gameTag(h)}
+      <span class="history-pct ${cls}">${pct}%</span>
+      <span class="history-score">${h.score}/${h.total}</span>
+    </div>`;
+  }).join("");
+}
+
+// ── Result + Leaderboard ──
+async function showResult() {
+  stopTimer();
+  show("result-screen");
+  const t = T[lang];
+  const pct = Math.round(score/totalQ*100);
+  document.getElementById("res-score").textContent = score;
+  document.getElementById("res-denom").textContent = "/ " + totalQ;
+  document.getElementById("res-sub").textContent = t.resAccuracy + ": " + pct + "%";
+  let msg = pct===100 ? t.resMsg10 : pct>=70 ? t.resMsg7 : pct>=40 ? t.resMsg4 : t.resMsgFail;
+  document.getElementById("res-msg").textContent = msg;
+  if (pct >= 70) launchConfetti();
+
+  saveHistory(score, totalQ);
+  checkEndAchievements();
+  renderNewAchievements();
+  renderRegionStats();
+  renderHistory();
+
+  if (window.storage) {
+    try {
+      const key = "lb:" + normName(playerName).slice(0,20);
+      let prev = 0;
+      try { const ex = await window.storage.get(key, true); if(ex) prev = JSON.parse(ex.value).score; } catch(e){}
+      if (score > prev) await window.storage.set(key, JSON.stringify({name:playerName, score, total:totalQ}), true);
+    } catch(e){}
+    await renderLeaderboard();
+    try {
+      const all = await window.storage.list("lb:", true);
+      document.getElementById("s-players").textContent = all.keys.length;
+    } catch(e){}
+  }
+}
+
+async function renderLeaderboard() {
+  if (!window.storage) return;
+  let keys = [];
+  try { const r = await window.storage.list("lb:", true); keys = r.keys; } catch(e){ return; }
+  const entries = [];
+  for (const k of keys) {
+    try { const r = await window.storage.get(k, true); if(r) entries.push(JSON.parse(r.value)); } catch(e){}
+  }
+  entries.sort((a,b)=>b.score-a.score);
+  const top = entries.slice(0,10);
+  const rankClass = (i) => i===0?"gold":i===1?"silver":i===2?"bronze":"";
+  let html = top.map((e,i)=>`
+    <div class="lb-row${normName(e.name)===normName(playerName)?" me":""}">
+      <span class="lb-rank ${rankClass(i)}">${i===0?"🥇":i===1?"🥈":i===2?"🥉":i+1}</span>
+      <span class="lb-name">${escapeHtml(e.name)}</span>
+      <span class="lb-sc">${e.score}/${e.total||10}</span>
+    </div>`).join("");
+  if (!html) html = `<div class="lb-row"><span style="color:var(--text-muted);font-size:13px;padding:4px 0">まだ記録なし — Be the first!</span></div>`;
+  document.getElementById("leaderboard").innerHTML = html;
+}
+
+// ── Navigation ──
+function show(id) {
+  document.querySelectorAll(".screen").forEach(s=>s.classList.remove("visible"));
+  document.getElementById(id).classList.add("visible");
+}
+
+function initQuiz() {
+  buildQuestions();
+  current = 0; score = 0; streak = 0; bestStreak = 0;
+  totalAnswerTime = 0; gameHintsUsed = 0; newAchievements = [];
+  hintsLeft = hintsByDiff[diffQ] || 1;
+  timerMax = gameMode === "map" ? 20 : 15;   // clicking the map takes a bit longer
+  document.getElementById("streak-badge").className = "streak-badge";
+  document.getElementById("quiz-screen").classList.toggle("map-mode", gameMode === "map");
+  startQuestion();
+}
+
+async function startQuiz() {
+  playerName = document.getElementById("name-input").value.trim() || "Player";
+  show("quiz-screen");
+  initQuiz();
+}
+
+function restartQuiz() {
+  show("quiz-screen");
+  initQuiz();
+}
+
+function goHome() {
+  stopTimer();
+  show("start-screen");
+  if (window.storage) {
+    window.storage.list("lb:", true).then(r => {
+      document.getElementById("s-players").textContent = r.keys.length;
+    }).catch(()=>{});
+  }
+}
+
+// ── Init ──
+(async () => {
+  // Restore theme
+  try {
+    const saved = localStorage.getItem("jmq_theme");
+    if (saved === "dark") {
+      isDark = true;
+      document.documentElement.setAttribute("data-theme","dark");
+      document.getElementById("theme-btn").textContent = "☀️";
+    }
+  } catch(e){}
+  try {
+    await loadMap();
+  } catch(e) {
+    const msg = {ja:"地図を読み込めませんでした。インターネット接続を確認して、ページを再読み込みしてください。",
+                 en:"Could not load the map. Check your internet connection and reload the page.",
+                 ru:"Не удалось загрузить карту. Проверь интернет и перезагрузи страницу."};
+    document.querySelector("#loading-overlay .spinner").style.display = "none";
+    document.getElementById("loading-txt").textContent = "⚠️ " + msg[lang];
+    return;
+  }
+  document.getElementById("loading-overlay").style.display = "none";
+  applyLang();
+})();
+</script>
+</body>
+</html>
