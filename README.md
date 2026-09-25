@@ -73,7 +73,7 @@ VS Code の Live Server で開くのがおすすめです。
 
 ## 👤 作者
 
-**Urmat**
+**Mamataliev Urmatbek**
 早稲田文理専門学校 アプリ・Web制作学科 2年
 卒業制作（2026年）
 
